@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';"/>
+        <title>Jaxaar's Bedwars Overlay </title>
+
+        <!-- https://www.electronjs.org/docs/latest/tutorial/security -->
+        <!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script> -->
+        <link rel="stylesheet" href="base.css">
+        <script src="../src/index.js"></script>
+          
+    </head>
+    <body>
+        <div id = base style="background: rgba(40, 68, 125, 0.591)">
+            <div class="menu">
+                <h1 class="menuitem" id="logo_title">BARS</h1>
+                <!--add tooltips for buttons-->
+                <img src="" id="clientimg">
+                <button name="Information" class="menuitem tabsbuttons" id="info" style="width: 31px;"></button>
+                <button name="Session" class="menuitem tabsbuttons" id="session" style="width: 31px;"></button>
+                <button name="Settings" class="menuitem tabsbuttons" id="settings"></button>
+                <button name="Update" class="menuitem" id="update"></button>
+                <button name="Quit" class="menuitem" id="quit"></button>
+                <button name="Minimize" class="menuitem" id="minimize"></button>
+                <button name="Show" class="menuitem" id="show"></button>
+            </div>
+        </div>
+    </body>
 </html>

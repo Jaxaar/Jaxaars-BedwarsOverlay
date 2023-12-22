@@ -1,0 +1,227 @@
+
+
+@font-face{
+    font-family: "Minecraftia";
+    src: url("../assets/Minecraftia.ttf");
+}
+
+
+
+html, body{
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    user-select: none;
+    height: 100%;
+    border-radius: 20px;
+}
+#base{
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    user-select: none;
+    height: 100%;
+    --primaryColor: rgb(188, 44, 255);
+}
+body::-webkit-scrollbar{
+    display: none;
+}
+::-webkit-scrollbar{
+    width: 8px;
+}
+::-webkit-scrollbar-track{
+    background: none;
+}
+::-webkit-scrollbar-thumb{
+    background: rgb(94, 94, 94);
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover{
+    background: #555;
+}
+::-webkit-scrollbar-corner{
+    background-color: transparent;
+}
+
+p{
+    font-size: "100px";
+    color: white;
+    font-family: "Minecraftia";
+}
+
+.menu{
+    background: rgba(2, 2, 2, 0.199);
+    -webkit-app-region: drag;
+    height: 35px;
+    width: 100%;
+}
+.menuitem{
+    display: inline-block;
+    height: inherit;
+    margin: 0;
+    -webkit-transition: background-image 0.1s ease-in-out;
+    transition: background-image 0.1s ease-in-out;
+}
+.menuitem:hover {
+    cursor: pointer;
+}
+
+#logo_title {
+    background: -webkit-linear-gradient(rgb(153, 0, 255), rgb(212, 0, 255));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: "abnes";
+    font-size: 30px;
+    filter: drop-shadow(2px 2px rgb(0, 0, 0));
+    width: 200px;
+    text-align: center;
+    line-height: 42px;
+    vertical-align: top;
+    -webkit-app-region: no-drag;
+}
+#info{
+    background: transparent;
+    background-image: url("../assets/info1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    /* display: none; */
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    -webkit-app-region: no-drag;
+}
+#info:hover{
+    background-image: url("../assets/info2.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+}
+#session{
+    background: transparent;
+    background-image: url("../assets/session1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    /* display: none; */
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    -webkit-app-region: no-drag;
+}
+#session:hover{
+    background-image: url("../assets/session2.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+}
+
+#settings{
+    background: transparent;
+    background-image: url("../assets/settings1.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+    /* display: none; */
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    -webkit-app-region: no-drag;
+}
+#settings:hover{
+    background-image: url("../assets/settings2.png");
+    background-size: cover;
+    height: 35px;
+    width: 35px;
+}
+#update{
+    background: transparent;
+    background-image: url("../assets/update1.png");
+    background-size: cover;
+    height: 32px;
+    width: 32px;
+    position: relative;
+    top: -2.5px;
+    /* display: none; */
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    -webkit-app-region: no-drag;
+}
+#update:hover{
+    background-image: url("../assets/update2.png");
+    background-size: cover;
+    height: 32px;
+    width: 32px;
+}
+#quit{
+    background: transparent;
+    background-image: url("../assets/quit1.png");
+    background-size: cover;
+    float: right;
+    height: 25px;
+    width: 25px;
+    margin: 5px;
+    margin-left: 0;
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    position: relative;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+}
+#quit:hover{
+    background-image: url("../assets/quit2.png");
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+}
+#minimize{
+    background: transparent;
+    background-image: url("../assets/min1.png");
+    background-size: cover;
+    float: right;
+    height: 25px;
+    width: 25px;
+    margin: 5px;
+    margin-right: 0;
+    margin-left: 0;
+    border: none;
+    outline: none;
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    position: relative;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+}
+#minimize:hover{
+    background-image: url("../assets/min2.png");
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+}
+#show{
+    background: transparent;
+    background-image: url("../assets/show1.png");
+    background-size: cover;
+    float: right;
+    /* display: none; */
+    height: 25px;
+    width: 25px;
+    margin: 5px;
+    margin-right: 0;
+    border: none;
+    outline: none;
+    transform: rotate(0deg);
+    filter: drop-shadow(1px 1px rgb(0, 0, 0));
+    position: relative;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+    transition: transform 0.1s ease-in-out;
+}
+#show:hover{
+    background-image: url("../assets/show2.png");
+    background-size: cover;
+    height: 25px;
+    width: 25px;
+}
