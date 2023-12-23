@@ -225,3 +225,17 @@ p{
     height: 25px;
     width: 25px;
 }
+
+
+.titleitems{
+    color: var(--primaryColor);
+    font-family: "Minecraftia";
+    font-size: 18px;
+    /* height: 28px;
+    margin: 0; */
+    padding: 0;
+    text-align: left;
+    line-height: block;
+    filter: drop-shadow(2px 2px rgb(0, 0, 0));
+    /* background: blue; */
+}

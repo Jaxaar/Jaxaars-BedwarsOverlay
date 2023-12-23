@@ -48,9 +48,12 @@ const createWindow = () => {
     win.loadFile('./src/index.html')
     win.setAlwaysOnTop(true);
     win.setSkipTaskbar(false)
-
     // win.setVisibleOnAllWorkspaces(true);
     win.setMenu(null);
+
+    if(isDev){
+        win.setFocusable(true)
+    }
   }
 
 

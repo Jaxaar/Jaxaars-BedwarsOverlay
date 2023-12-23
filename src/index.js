@@ -22,15 +22,15 @@ function main(){
     const showButton = document.getElementById('show')
     showButton.addEventListener('click', () => {
         //con.log(showRotation($('#show').css('transform')));
-        if (showButton.style.transform === 'rotate(0deg)'){
-            ipcRenderer.invoke('toggleShow', Math.round(35))
+        if (showButton.style.transform === 'rotate(90deg)'){
+            ipcRenderer.invoke('toggleShow', 600)
             // currentWindow.setSize(currentWindow.webContents.getOwnerBrowserWindow().getBounds().width, Math.round(zoom*35), true);
-            showButton.style.transform =  'rotate(90deg)'
+            showButton.style.transform =  'rotate(0deg)'
             // $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none');
         }
         else{
-            ipcRenderer.invoke('toggleShow', 600)
-            showButton.style.transform =  'rotate(0deg)'
+            ipcRenderer.invoke('toggleShow', Math.round(35))
+            showButton.style.transform =  'rotate(90deg)'
             // if ($('#infodiv').css('display') === 'none' && $('#settingsdiv').css('display') === 'none'){$('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block');}
         }
     });
