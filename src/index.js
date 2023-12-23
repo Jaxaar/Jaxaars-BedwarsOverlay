@@ -1,5 +1,7 @@
 const { shell, clipboard, ipcRenderer } = require('electron');
 
+const { fetchPlayerHypixelData, fetchPlayer } = require('./apiCalls')
+
 // const config = require('electron-json-config');
 
 
@@ -47,6 +49,25 @@ function main(){
     //     //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
     //     // }
     // });
+
+
+    ipcRenderer.on('test', (event, ...arg) => {
+        console.log('test');
+        let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
+        fetchPlayer('Jaxaar')
+        // for (let i = 0, ln = igns.length; i < ln; i++) {
+        //     addPlayer(igns[i]);
+        // }
+
+        //ipcRenderer.send('autowho');
+
+        // MODAL WINDOW USAGE
+        // ModalWindow.open({
+        //     title: 'Hello modal window',
+        //     content: 'Please tell me this modal window actually worked dude. I tried something new with JS and am hoping this works first try', // optional
+        //     type: 1 // 1 for success, -1 for error, -2 for warning, leave blank for general info
+        // });
+    });
 
 }
 

@@ -5,9 +5,6 @@ const isDev = require('electron-is-dev');
 
 
 
-require("@electron/remote/main").enable(BrowserWindow, app)
-
-
 
 
 let win
