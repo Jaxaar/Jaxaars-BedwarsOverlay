@@ -1,9 +1,4 @@
 
-// const config = require('electron-json-config');
-
-
-
-
 
 const HY_API = 'https://api.hypixel.net/v2'
 // const HY_HEADER = { 'API-Key': config.get('key', '1') };
@@ -39,9 +34,10 @@ async function fetchPlayerHypixelData(uuid, ign, options) {
             // players.push({name: ign, namehtml: ign, api: null})
         };
     }
-    const dataJSON = await validateJSON(data)
+    const dataJSON = await data.json()
 
-    console.log(dataJSON)
+    // console.log(dataJSON)
+    return dataJSON
 
 
 
@@ -70,19 +66,23 @@ async function fetchPlayerHypixelData(uuid, ign, options) {
     // }});
 }
 
-function fetchPlayer_hypixel(uuid, ign, options) {
-    let players = []
-    if (!goodkey) {
-        players.push({name: ign, namehtml: ign, api: null});
-    }
-    playerAJAX(uuid, ign, options);
-}
 
-// function verifyKey($apiElement = false) {
-//     $.ajax({type: 'GET', async: false, url: `${HY_API}/punishmentstats`, headers: HY_HEADER, success: (data) => {
-//         if (!data.success) return goodkey = false;
-//         goodkey = true;
-//         config.set('key', HY_HEADER['API-Key']);
+async function verifyKey(key) {
+    header = {'api-key': key}
+
+    const url = `${HY_API}/punishmentstats`
+    const data   = await fetch(url, {
+        method: 'GET',
+        headers: header,
+    })
+    HY_HEADER['api-key'] = header['api-key']
+
+    if (!data.ok) {
+        goodkey = false;
+    }
+    goodkey = true;
+    // config['api-key'] = HY_HEADER['api-key']
+}
 //         if ($apiElement) {
 //             $apiElement.val(HY_HEADER['API-Key']);
 //             ModalWindow.open({ title: 'API Key Accepted', type: 1, content: "You're good to go!" });
@@ -101,7 +101,6 @@ function fetchPlayer_hypixel(uuid, ign, options) {
 //         }
 //         updateArray();
 //     }});
-//     updateHTML();
 // }
 
 
@@ -126,11 +125,20 @@ async function fetchPlayer(ign, options = {}) {
     
     const data = await fetch(url)
     const dataJSON =  await data.json()
-    console.log("MC Data")
-    console.log(dataJSON)
+    // console.log("MC Data")
+    // console.log(dataJSON)
 
-    fetchPlayerHypixelData(dataJSON.id, dataJSON.name, options);
+    if (!goodkey) {
+        return {
+            name: ign,
+            api: null
+        }
+    }
 
+    return {
+        name: ign,
+        api: await fetchPlayerHypixelData(dataJSON.id, dataJSON.name, options)
+    }
 
     // $.ajax({type: 'GET', async: true, url: mojang + ign, success: (data, status) => {
     //     if (status === 'success') {
@@ -164,7 +172,7 @@ async function fetchPlayer(ign, options = {}) {
 
 
 module.exports = {
-    fetchPlayerHypixelData, fetchPlayer
+    fetchPlayerHypixelData, fetchPlayer, verifyKey
 }
 
 

@@ -1,14 +1,21 @@
 const { shell, clipboard, ipcRenderer } = require('electron');
 
-const { fetchPlayerHypixelData, fetchPlayer } = require('./apiCalls')
-
-// const config = require('electron-json-config');
-
+const { fetchPlayerHypixelData, fetchPlayer, verifyKey} = require('./apiCalls')
+const { createStatsRowElement } = require("./playerRowFactory")
 
 
 
-function main(){
-    
+
+
+
+async function main(){
+
+    const config = await ipcRenderer.invoke('getConfigObj')
+    console.log(config)
+    console.log(config.data.HYkey)
+    verifyKey(config.data.HYkey)
+
+
     // Handle Control Buttons
 
     document.getElementById('quit').addEventListener('click', () => {
@@ -51,13 +58,19 @@ function main(){
     // });
 
 
-    ipcRenderer.on('test', (event, ...arg) => {
+    ipcRenderer.on('test', async (event, ...arg) => {
+        verifyKey(config.data.HYkey)
         console.log('test');
-        let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
-        fetchPlayer('Jaxaar')
-        // for (let i = 0, ln = igns.length; i < ln; i++) {
-        //     addPlayer(igns[i]);
-        // }
+        console.log(config)
+
+        // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
+        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates'];
+        // fetchPlayer('Jaxaar')
+        for (player of igns) {
+            pjson = await fetchPlayer(player)
+            console.log(pjson)
+            displayPlayer(pjson)
+        }
 
         //ipcRenderer.send('autowho');
 
@@ -68,7 +81,14 @@ function main(){
         //     type: 1 // 1 for success, -1 for error, -2 for warning, leave blank for general info
         // });
     });
+}
 
+
+
+function displayPlayer(playerJSON){
+    const displayEl = document.getElementById("statsRows")
+    const playerRowEl = createStatsRowElement(playerJSON, {})
+    displayEl.append(playerRowEl)
 }
 
 

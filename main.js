@@ -1,14 +1,14 @@
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron')
+// const homedir = app.getPath('home').replaceAll('\\', '/');
 const {path} = require('path')
+const { Config } = require("./src/configHandler")
+
 
 const isDev = require('electron-is-dev');
-
-
-
-
-
+const config =  new Config(`${app.getPath('userData')}/config.json`, {'ign': null, 'HYkey': ''})
 let win
 let keybinds = {}
+let through = false
 
 
 
@@ -56,12 +56,12 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     createWindow()
-    setKeybind('peak', null ?? 'CommandOrControl+Shift+A')
-    setKeybind('clear', null ?? 'CommandOrControl+Shift+Z')
-    setKeybind('through', null ?? 'CommandOrControl+Shift+T')
-    // setKeybind('peak', config.get('settings.keybinds.peak', null) ?? 'CommandOrControl+Shift+A')
-    // setKeybind('clear', config.get('settings.keybinds.clear', null) ?? 'CommandOrControl+Shift+Z')
-    // setKeybind('through', config.get('settings.keybinds.through', null) ?? 'CommandOrControl+Shift+T')
+    // setKeybind('peak', null ?? 'CommandOrControl+Shift+A')
+    // setKeybind('clear', null ?? 'CommandOrControl+Shift+Z')
+    // setKeybind('through', null ?? 'CommandOrControl+Shift+T')
+    setKeybind('peak', config.get('settings.keybinds.peak') ?? 'CommandOrControl+Shift+A')
+    setKeybind('clear', config.get('settings.keybinds.clear') ?? 'CommandOrControl+Shift+Z')
+    setKeybind('through', config.get('settings.keybinds.through') ?? 'CommandOrControl+Shift+T')
   
     if (isDev) {
         globalShortcut.register('CommandOrControl+f', () => {
@@ -157,4 +157,9 @@ ipcMain.handle("minimizeApp", (event) => {
 
 ipcMain.handle('toggleShow', (event, height) => {
     win.setSize(win.webContents.getOwnerBrowserWindow().getBounds().width, height, true);
+})
+
+
+ipcMain.handle('getConfigObj', (event) => {
+    return config
 })
