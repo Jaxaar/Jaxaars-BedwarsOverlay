@@ -12,7 +12,7 @@ function createStatsRowElement(playerJSON, rowData){
     rowEl.id = `${playerJSON.name}-row`
 
     const playerEl = document.createElement('td')
-    playerEl.innerText = playerJSON.name
+    playerEl.innerText = `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}`
     rowEl.append(playerEl)
 
     
@@ -25,15 +25,15 @@ function createStatsRowElement(playerJSON, rowData){
     rowEl.append(wsEl)
     
     const fkdrEl = document.createElement('td')
-    fkdrEl.innerText = (playerJSON.api.player.stats.Bedwars.final_kills_bedwars / playerJSON.api.player.stats.Bedwars.final_deaths_bedwars)
+    fkdrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.final_kills_bedwars / playerJSON.api.player.stats.Bedwars.final_deaths_bedwars * 100) / 100
     rowEl.append(fkdrEl)
     
     const wlrEl = document.createElement('td')
-    wlrEl.innerText = (playerJSON.api.player.stats.Bedwars.wins_bedwars / playerJSON.api.player.stats.Bedwars.losses_bedwars)
+    wlrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.wins_bedwars / playerJSON.api.player.stats.Bedwars.losses_bedwars * 100)/ 100
     rowEl.append(wlrEl)
 
     const bbblrEl = document.createElement('td')
-    bbblrEl.innerText = (playerJSON.api.player.stats.Bedwars.beds_broken_bedwars / playerJSON.api.player.stats.Bedwars.beds_lost_bedwars)
+    bbblrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.beds_broken_bedwars / playerJSON.api.player.stats.Bedwars.beds_lost_bedwars * 100)/ 100
     rowEl.append(bbblrEl)
 
     const finalsEl = document.createElement('td')
