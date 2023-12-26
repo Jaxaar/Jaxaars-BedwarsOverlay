@@ -1,12 +1,12 @@
 const { shell, clipboard, ipcRenderer } = require('electron');
-const Tail = require('tail');
+const Tail = require('tail').Tail;
 
 const { fetchPlayerHypixelData, fetchPlayer, verifyKey} = require('./apiCalls')
 const { createStatsRowElement } = require("./playerRowFactory")
 
 const { readJSONFile } = require('./Test/jaxaarHelpers')
 
-
+let players = {}
 
 
 
@@ -69,8 +69,9 @@ async function main(){
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
         let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates'];
         // fetchPlayer('Jaxaar')
-        for (player of igns) {
-            pjson = await fetchPlayer(player)
+        for (const player of igns) {
+            const pjson = await fetchPlayer(player)
+            players[player] = pjson
             console.log(pjson)
             displayPlayer(pjson)
         }
@@ -78,10 +79,12 @@ async function main(){
         console.log("Running test file...")
 
         const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
+
         if (!gameChatJSON) return
     
         for(const s of gameChatJSON.chat){
             const state = {
+                inGameLobby: false,
                 gameStarting: false,
                 gameStarted: false,
                 gameRunning: false,
@@ -89,8 +92,8 @@ async function main(){
                 gameEnded: false,
             }
             for(const line of s){
-                handleLogLine(line, opts)
-                console.log(opts)
+                handleLogLine(line, state)
+                // console.log(state)
             }
         }
 
@@ -108,7 +111,7 @@ async function main(){
         testIndex()
     })
 
-    monitorLogFile(file)
+    // monitorLogFile(file)
 }
 
 
@@ -152,6 +155,7 @@ function monitorLogFile(filePath){
         return
     }
     const state = {
+        inGameLobby: false,
         gameStarting: false,
         gameStarted: false,
         gameRunning: false,
@@ -165,9 +169,54 @@ function monitorLogFile(filePath){
 
 
 function handleLogLine(data, state){
+    // if(!data.includes('[CHAT]')){
+    //     return
+    // }
+
+    // const msg = data.substring(k+7).replace(/(§|�)([0-9]|a|b|e|d|f|k|l|m|n|o|r|c)/gm, '');
+
+    const msg = data
+
+    // console.log(msg)
+    if (msg.includes('ONLINE:') && msg.includes(',')){
+        let playersInLobby = msg.substring(8).split(', ');
+        const copyOfPlayers = players
+        players = {}
+        for (p of playersInLobby){
+            addPlayerData(p, copyOfPlayers[p])
+        }
+
+            // if (w.indexOf('[') !== -1) w = w = w.substring(0, w.indexOf('[')-1);
+            // for (let j = 0; j < players.length; j++){
+            //     if (players[j].name === who[i]) contains = true;
+            // }
+        //     if(!players[w]){
+        //         addPlayer(w)
+        //     }
+        // }
+        // for (let i = 0; i < players.length; i++){
+        //     if (!who.includes(players[i].name)){players.splice(i, 1); changed = true; updateArray();}
+    }
+    else if (msg.includes('has joined') && !msg.includes(':')){
+    }
+    else if (msg.includes('has quit') && !msg.includes(':')){
+    }
+    else if (msg.includes('Sending you') && !msg.indexOf(':')){
+
+    } 
+    else if ((msg.includes('joined the lobby!') || msg.includes('rewards!')) && !msg.includes(':')) {
+    }
+    else if ((msg.includes('FINAL KILL') || msg.includes('disconnected')) && !msg.includes(':')){
+    }
+}
 
 
-
+async function addPlayerData(playerName, data){
+    if(!data){
+        data = await fetchPlayer(playerName)
+    }
+    players[playerName] = data
+    displayPlayer(players[playerName])
 }
 
 
