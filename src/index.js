@@ -1,7 +1,10 @@
 const { shell, clipboard, ipcRenderer } = require('electron');
+const Tail = require('tail');
 
 const { fetchPlayerHypixelData, fetchPlayer, verifyKey} = require('./apiCalls')
 const { createStatsRowElement } = require("./playerRowFactory")
+
+const { readJSONFile } = require('./Test/jaxaarHelpers')
 
 
 
@@ -72,6 +75,25 @@ async function main(){
             displayPlayer(pjson)
         }
 
+        console.log("Running test file...")
+
+        const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
+        if (!gameChatJSON) return
+    
+        for(const s of gameChatJSON.chat){
+            const state = {
+                gameStarting: false,
+                gameStarted: false,
+                gameRunning: false,
+                gameEnding: false,
+                gameEnded: false,
+            }
+            for(const line of s){
+                handleLogLine(line, opts)
+                console.log(opts)
+            }
+        }
+
         //ipcRenderer.send('autowho');
 
         // MODAL WINDOW USAGE
@@ -81,6 +103,12 @@ async function main(){
         //     type: 1 // 1 for success, -1 for error, -2 for warning, leave blank for general info
         // });
     });
+
+    ipcRenderer.on('runIndexTest', async (event, ...arg) => {
+        testIndex()
+    })
+
+    monitorLogFile(file)
 }
 
 
@@ -112,3 +140,37 @@ function displayPlayer(playerJSON){
 document.addEventListener("DOMContentLoaded", () =>{
     main()
 })
+
+
+
+function monitorLogFile(filePath){
+    let tail
+    try{
+        tail = new Tail(filePath, {useWatchFile: true, nLines: 1, fsWatchOptions: {interval: 100}});
+    } catch {
+        console.log("Log file missing")
+        return
+    }
+    const state = {
+        gameStarting: false,
+        gameStarted: false,
+        gameRunning: false,
+        gameEnding: false,
+        gameEnded: false,
+    }
+    tail.on('line', (data) => {
+        handleLogLine(data, state)
+    })
+}
+
+
+function handleLogLine(data, state){
+
+
+
+}
+
+
+module.exports = {
+    handleLogLine
+}

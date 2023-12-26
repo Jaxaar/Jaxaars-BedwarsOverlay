@@ -70,6 +70,9 @@ app.whenReady().then(() => {
         globalShortcut.register('Ctrl+Alt+A', () => {
             win.webContents.send('test', 'hi testing');
         });
+        globalShortcut.register('Ctrl+Alt+T', () => {
+            win.webContents.send('runIndexTest');
+        });
     }
 
     app.on('activate', () => {
