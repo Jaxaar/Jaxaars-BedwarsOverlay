@@ -1,5 +1,6 @@
 const { shell, clipboard, ipcRenderer } = require('electron');
 const Tail = require('tail').Tail;
+const fs = require('fs');
 
 const { fetchPlayerHypixelData, fetchPlayer, verifyKey} = require('./apiCalls')
 const { createStatsRowElement } = require("./playerRowFactory")
@@ -107,11 +108,19 @@ async function main(){
         // });
     });
 
-    ipcRenderer.on('runIndexTest', async (event, ...arg) => {
-        testIndex()
-    })
+    const logPath = config.data.logPath
 
-    // monitorLogFile(file)
+    // console.log(logPath)
+    // console.log("C:/Users/jax16/curseforge/minecraft/Instances/1.8.9 QOL/logs")
+    // console.log(fs.existsSync("C:/Users/jax16/curseforge/minecraft/Instances/1.8.9 QOL/logs"))
+
+
+    if (fs.existsSync(logPath)) {
+        monitorLogFile(`${logPath}/latest.log`)
+    }
+    else{
+        console.log("LogPath DNE")
+    }
 }
 
 
@@ -122,6 +131,16 @@ function displayPlayer(playerJSON){
     displayEl.append(playerRowEl)
 }
 
+function removePlayerDisplay(playerJSON){
+    const playerRowEl = document.getElementById(`${playerJSON.name}-row`)
+    playerRowEl.remove()
+}
+
+
+function clearDisplay(playerJSON){
+    const displayEl = document.getElementById("statsRows")
+    displayEl.innerHTML = ""
+}
 
 
 
@@ -162,6 +181,7 @@ function monitorLogFile(filePath){
         gameEnding: false,
         gameEnded: false,
     }
+    console.log("Monitoring...")
     tail.on('line', (data) => {
         handleLogLine(data, state)
     })
@@ -169,19 +189,20 @@ function monitorLogFile(filePath){
 
 
 function handleLogLine(data, state){
-    // if(!data.includes('[CHAT]')){
-    //     return
-    // }
+    if(!data.includes('[CHAT]')){
+        return
+    }
+    const k = data.indexOf('[CHAT]');
+    const msg = data.substring(k+7).replace(/(§|�)([0-9]|a|b|e|d|f|k|l|m|n|o|r|c)/gm, '');
 
-    // const msg = data.substring(k+7).replace(/(§|�)([0-9]|a|b|e|d|f|k|l|m|n|o|r|c)/gm, '');
+    // const msg = data
 
-    const msg = data
-
-    // console.log(msg)
+    console.log(msg)
     if (msg.includes('ONLINE:') && msg.includes(',')){
         let playersInLobby = msg.substring(8).split(', ');
         const copyOfPlayers = players
         players = {}
+        clearDisplay()
         for (p of playersInLobby){
             addPlayerData(p, copyOfPlayers[p])
         }
