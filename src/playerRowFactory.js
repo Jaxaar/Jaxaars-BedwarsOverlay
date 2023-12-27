@@ -10,6 +10,8 @@ function createStatsRowElement(playerJSON, rowData){
 
     const rowEl = document.createElement('tr')
     rowEl.id = `${playerJSON.name}-row`
+    rowEl.setAttribute("data-score", playerJSON.sortingScore)
+
 
     const playerEl = document.createElement('td')
     playerEl.innerText = `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}`

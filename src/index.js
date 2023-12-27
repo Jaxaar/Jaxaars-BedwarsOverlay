@@ -83,7 +83,8 @@ async function main(){
 
         if (!gameChatJSON) return
     
-        for(const s of gameChatJSON.chat){
+        for(let s of gameChatJSON.chat){
+            s = "[22:01:15] [Client thread/INFO]: [CHAT]" + s 
             const state = {
                 inGameLobby: false,
                 gameStarting: false,
@@ -128,7 +129,15 @@ async function main(){
 function displayPlayer(playerJSON){
     const displayEl = document.getElementById("statsRows")
     const playerRowEl = createStatsRowElement(playerJSON, {})
+
+    for(const row of displayEl.children){
+        if(row.getAttribute("data-score") < playerJSON.sortingScore){
+            displayEl.insertBefore(playerRowEl, row)
+            return
+        }
+    }
     displayEl.append(playerRowEl)
+
 }
 
 function removePlayerDisplay(playerJSON){
@@ -197,14 +206,14 @@ function handleLogLine(data, state){
 
     // const msg = data
 
-    console.log(msg)
+    // console.log(msg)
     if (msg.includes('ONLINE:') && msg.includes(',')){
         let playersInLobby = msg.substring(8).split(', ');
         const copyOfPlayers = players
         players = {}
         clearDisplay()
         for (p of playersInLobby){
-            addPlayerData(p, copyOfPlayers[p])
+            addPlayer(p, copyOfPlayers[p])
         }
 
             // if (w.indexOf('[') !== -1) w = w = w.substring(0, w.indexOf('[')-1);
@@ -219,25 +228,118 @@ function handleLogLine(data, state){
         //     if (!who.includes(players[i].name)){players.splice(i, 1); changed = true; updateArray();}
     }
     else if (msg.includes('has joined') && !msg.includes(':')){
+        addPlayer(msg.split(' ')[0])
     }
     else if (msg.includes('has quit') && !msg.includes(':')){
+        removePlayer(msg.split(' ')[0])
     }
-    else if (msg.includes('Sending you') && !msg.indexOf(':')){
-
+    else if (msg.includes('Sending you') && !msg.includes(':')){
+        // console.log("Entering game lobby")
+        players = {}
+        clearDisplay()
     } 
-    else if ((msg.includes('joined the lobby!') || msg.includes('rewards!')) && !msg.includes(':')) {
+    else if ((msg.includes('joined the lobby!') || msg.includes('rewards!') || msg.includes('slid into the lobby!')) && !msg.includes(':')) {
+        // console.log('In Main Lobby')
+        players = {}
+        clearDisplay()
     }
     else if ((msg.includes('FINAL KILL') || msg.includes('disconnected')) && !msg.includes(':')){
+        removePlayer(msg.split(' ')[0])
     }
+
+    // if(msg.includes("Testing1234") && msg.includes("Testing1234")){
+    //     console.log("Testing" + msg)
+    //     testing()
+    // }
+
+
+    // else if(msg.includes("The game starts in 1 second!") && !msg.includes(":")){
+    //     // Update state vars
+    //     this.bools.gameStarting = true
+    // }
+    // // Verify it actual started
+    // else if(this.bools.gameStarting && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
+    //     // Update state vars
+    //     this.bools.gameStarting = false
+    //     this.bools.gameStarted = true
+    // }
+    // // Verify it's bedwars starting
+    // else if(this.bools.gameStarted && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
+    //     // Update state vars
+    //     this.bools.gameStarted = false
+    //     this.bools.gameRunning = true
+    //     // Determine gamemode
+    //     // if(msg.replace(" ", "") === "BedWars"){
+    //     //     this.bools.normalMode = true
+    //     // }
+    //     // else{
+    //     //     this.bools.dreamMode = true
+    //     // }
+    //     this.bools.normalMode = true
+
+    //     // Log the players who are in the game
+    //     this.logPlayers(players)
+
+    // } 
+    
+    // // Catch mid game events
+    // else if (this.flags.finals && msg.includes('FINAL KILL') && !msg.includes(":")){
+    //     this.handleFinals(msg)
+    // }
+    // else if (msg.includes("BED DESTRUCTION") && msg.includes("Your Bed") && !msg.includes(":")){
+    //     this.handleBedsBroken(msg)
+    // }
+
+    // // Detect Game end (Assuming still in lobby)
+    // else if(this.bools.gameRunning && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
+    //     // Update state vars
+    //     this.bools.gameEnding = true
+    // }
+    // // Verify Game end
+    // else if (this.bools.gameEnding && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
+    //     this.bools.gameEnding = false
+    //     this.bools.gameRunning = false
+    //     this.bools.gameEnded = true
+    // }
+
+    // // Game end WIP
+    // else if (this.bools.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
+    //     this.bools.gameEnded = false
+    // }
+    // else if (this.bools.gameEnded && msg.includes("Slumber Tickets! (Win)")){
+    //     this.bools.gameEnded = false
+    // }
 }
 
+async function testing(){
+    const data = await fetchPlayer("Jaxaar")
+    console.log("Data: ")
+    console.log(data)
+}
 
-async function addPlayerData(playerName, data){
+async function addPlayer(playerName, data){
+    if(players[playerName]){
+        return
+    }
     if(!data){
         data = await fetchPlayer(playerName)
     }
+    console.log(`Adding ${playerName}`)
     players[playerName] = data
     displayPlayer(players[playerName])
+}
+
+async function removePlayer(playerName){
+    console.log(`Removing ${playerName}`)
+    if(!players[playerName]){
+        return false
+    }
+    removePlayerDisplay(players[playerName])
+    // console.log("Before")
+    // console.log(players)
+    delete players[playerName]
+    // console.log(players)
+
 }
 
 

@@ -2,10 +2,8 @@
     {
         "tag": "WinStreak",
         "Title": "WS",
-        "tag": "player", 
-        "tag": "player",
-        "tag": "player"
-
+        "activated": "true",
+        "unique": "true"
     }
 
 

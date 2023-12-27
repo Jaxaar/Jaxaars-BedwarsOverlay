@@ -123,21 +123,25 @@ async function fetchPlayer(ign, options = {}) {
 
     const url = MOJANG_API + ign
     
-    const data = await fetch(url)
-    const dataJSON =  await data.json()
+    const mojangData = await fetch(url)
+    const dataJSON =  await mojangData.json()
     // console.log("MC Data")
     // console.log(dataJSON)
 
     if (!goodkey) {
         return {
             name: ign,
-            api: null
+            api: null,
+            sortingScore: Number.MAX_VALUE
         }
     }
 
+    const apiData =  await fetchPlayerHypixelData(dataJSON.id, dataJSON.name, options)
+
     return {
         name: ign,
-        api: await fetchPlayerHypixelData(dataJSON.id, dataJSON.name, options)
+        api: apiData,
+        sortingScore: scoreJSON(apiData)
     }
 
     // $.ajax({type: 'GET', async: true, url: mojang + ign, success: (data, status) => {
@@ -169,6 +173,13 @@ async function fetchPlayer(ign, options = {}) {
     // }});
 }
 
+
+function scoreJSON(data){
+
+    const fkdr = Math.round(data.player.stats.Bedwars.final_kills_bedwars / data.player.stats.Bedwars.final_deaths_bedwars * 100) / 100
+    const stars = data.player.achievements.bedwars_level
+    return Math.round(stars * Math.pow(fkdr, 2))
+}
 
 
 module.exports = {
