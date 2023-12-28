@@ -14,6 +14,7 @@ html, body{
     user-select: none;
     height: 100%;
     border-radius: 20px;
+    font-family: "Minecraftia";
 }
 #base{
     margin: 0;
@@ -54,6 +55,7 @@ p{
     -webkit-app-region: drag;
     height: 35px;
     width: 100%;
+    overflow-x: hidden;
 }
 .menuitem{
     display: inline-block;
@@ -66,6 +68,7 @@ p{
     cursor: pointer;
 }
 
+
 #logo_title {
     background: -webkit-linear-gradient(rgb(153, 0, 255), rgb(212, 0, 255));
     background-clip: text;
@@ -74,15 +77,18 @@ p{
     font-family: "abnes";
     font-size: 30px;
     filter: drop-shadow(2px 2px rgb(0, 0, 0));
-    width: 200px;
+    width: max(6.5em, 20%);
     text-align: center;
     line-height: 42px;
     vertical-align: top;
-    -webkit-app-region: no-drag;
+    margin-right: 3%;
+    margin-left: 3%;
+    overflow: visible;
+    /* -webkit-app-region: no-drag; */
 }
-#info{
+
+.tabsbuttons{
     background: transparent;
-    background-image: url("../assets/info1.png");
     background-size: cover;
     height: 35px;
     width: 35px;
@@ -92,51 +98,33 @@ p{
     filter: drop-shadow(1px 1px rgb(0, 0, 0));
     -webkit-app-region: no-drag;
 }
-#info:hover{
-    background-image: url("../assets/info2.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-}
-#session{
-    background: transparent;
-    background-image: url("../assets/session1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    /* display: none; */
-    border: none;
-    outline: none;
-    filter: drop-shadow(1px 1px rgb(0, 0, 0));
-    -webkit-app-region: no-drag;
-}
-#session:hover{
-    background-image: url("../assets/session2.png");
+.tabsbuttons:hover{
     background-size: cover;
     height: 35px;
     width: 35px;
 }
 
+#info{
+    background-image: url("../assets/info1.png");
+}
+#info:hover{
+    background-image: url("../assets/info2.png");
+}
+#session{
+    background-image: url("../assets/session1.png");
+}
+#session:hover{
+    background-image: url("../assets/session2.png");
+}
+
 #settings{
-    background: transparent;
     background-image: url("../assets/settings1.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
-    /* display: none; */
-    border: none;
-    outline: none;
-    filter: drop-shadow(1px 1px rgb(0, 0, 0));
-    -webkit-app-region: no-drag;
 }
 #settings:hover{
     background-image: url("../assets/settings2.png");
-    background-size: cover;
-    height: 35px;
-    width: 35px;
 }
+
 #update{
-    background: transparent;
     background-image: url("../assets/update1.png");
     background-size: cover;
     height: 32px;
@@ -247,7 +235,8 @@ p{
     /* background-position: left;
     background-position-x: center; */
     background-size: 20px;
-    padding-left: 22px;
+    padding-left: 20px;
+    margin: 2px;
 }
 
 [data-avatar="notNick"]{
@@ -255,5 +244,34 @@ p{
     /* background-position: left;
     background-position-x: center; */
     background-size: 20px;
-    padding-left: 22px;
+    padding-right: 20px;
+    margin: 2px;
+}
+
+/* Bad */
+.t0Color{
+    color: #AAAAAA;
+}
+/* Ok */
+.t1Color{
+    color: #FFFFFF;
+}
+/* Decent */
+.t2Color{
+    color: #FFAA00;
+}
+/* Good */
+.t3Color{
+    color: #00AAAA;
+}
+/* Great */
+.t4Color{
+    color: #AA0000;
+}
+/* Legend */
+.t5Color{
+    color: #AA00AA;
+}
+.starsDisplay{
+    margin: 4px;
 }

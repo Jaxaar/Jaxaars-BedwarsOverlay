@@ -70,7 +70,7 @@ async function main(){
         console.log(config)
 
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
-        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG'];
+        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG', 'TheLuckiestBunny', 'MinaUFG1010'];
         // fetchPlayer('Jaxaar')
         for (const player of igns) {
             const pjson = await fetchPlayer(player)

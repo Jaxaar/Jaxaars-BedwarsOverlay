@@ -4,7 +4,7 @@
         "title": "Player",
         "activated": "true",
         "unique": "true",
-        "colWidth": "26.75%"
+        "colWidth": "46.75%"
     },
     {
         "tag": "tag",
@@ -19,7 +19,8 @@
         "activated": "true",
         "unique": "false",
         "colWidth": "6.5%",
-        "path": "api.player.stats.Bedwars.winstreak"
+        "path": "api.player.stats.Bedwars.winstreak",
+        "colorScale": [4, 10, 25, 50, 100]
     },
     {
         "tag": "FKDR",
@@ -30,7 +31,8 @@
         "ratio": {
             "topPath": "api.player.stats.Bedwars.final_kills_bedwars",
             "botPath": "api.player.stats.Bedwars.final_deaths_bedwars"
-        }
+        },
+        "colorScale": [1, 3, 5, 10, 25]
     },
     {
         "tag": "WLR",
@@ -41,7 +43,8 @@
         "ratio": {
             "topPath": "api.player.stats.Bedwars.wins_bedwars",
             "botPath": "api.player.stats.Bedwars.losses_bedwars"
-        }
+        },
+        "colorScale": [1, 2, 5, 7, 10]
     },
     {
         "tag": "BBLR",
@@ -52,7 +55,8 @@
         "ratio": {
             "topPath": "api.player.stats.Bedwars.beds_broken_bedwars",
             "botPath": "api.player.stats.Bedwars.beds_lost_bedwars"
-        }
+        },
+        "colorScale": [1, 2, 3, 5, 7.5]
     },
     {
         "tag": "Finals",
@@ -60,7 +64,8 @@
         "activated": "true",
         "unique": "false",
         "colWidth": "11.25%",
-        "path": "api.player.stats.Bedwars.final_kills_bedwars"
+        "path": "api.player.stats.Bedwars.final_kills_bedwars",
+        "colorScale": [1000, 5000, 10000, 20000, 30000]
     },
     {
         "tag": "Wins",
@@ -68,7 +73,7 @@
         "activated": "true",
         "unique": "false",
         "colWidth": "9%",
-        "path": "api.player.stats.Bedwars.wins_bedwars"
-
+        "path": "api.player.stats.Bedwars.wins_bedwars",
+        "colorScale": [500, 1000, 3000, 5000, 10000]
     }
 ]

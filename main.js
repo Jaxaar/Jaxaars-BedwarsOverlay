@@ -18,9 +18,9 @@ let through = false
 // modify your existing createWindow() function
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 800,
+        width: 650,
         height: 600,
-        minWidth: 400,
+        minWidth: 450,
         x:0,
         y:0,
         show: true,
