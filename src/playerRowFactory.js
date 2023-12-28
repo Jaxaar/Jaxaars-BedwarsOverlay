@@ -6,8 +6,70 @@
 
 
 
-function createStatsRowElement(playerJSON, rowData){
+function createStatsRowElement(playerJSON, colData){
+    if(!colData){
+        return null
+    }
+    // return initialHardCoded(playerJSON)
 
+    const rowEl = document.createElement('tr')
+    rowEl.id = `${playerJSON.name}-row`
+    rowEl.setAttribute("data-score", playerJSON.sortingScore)
+
+    for(col of colData){
+        if(col.activated == "false"){
+            continue
+        }
+        if(col.unique == "true"){
+            rowEl.append(handleUniqueColumn(playerJSON, col))
+            continue
+        }
+        if(col.ratio){
+            const el = document.createElement('td')
+            const val = Math.round(navigateJSONforData(playerJSON, col.ratio.topPath) / navigateJSONforData(playerJSON, col.ratio.botPath) * 100)/100
+            // if(!val){
+            //     if(val === NaN){
+            //         el.innerText = navigateJSONforData(playerJSON, col.ratio.topPath)
+            //     }
+            //     else if (val == undefined){
+            //         el.innerText = "-"
+            //     }
+            // }
+            // else{
+            //     el.innerText = val
+            // }
+            el.innerText = val ? val : "-"
+            rowEl.append(el)
+        }
+        else{
+            const el = document.createElement('td')
+            const val = navigateJSONforData(playerJSON, col.path)
+            el.innerText = val ? val : "-"
+            rowEl.append(el)
+        }
+    }
+    return rowEl
+}
+
+
+
+function handleUniqueColumn(playerJSON, col){
+    if(col.tag == "playerName"){
+        const playerEl = document.createElement('td')
+        playerEl.innerText = `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}`
+        return playerEl
+    }
+    else if(col.tag == "tag"){
+        const tagEl = document.createElement('td')
+        tagEl.innerText = "-"
+        return tagEl
+    }
+    else{
+        return "NotHandled"
+    }
+}
+
+function initialHardCoded(playerJSON){
     const rowEl = document.createElement('tr')
     rowEl.id = `${playerJSON.name}-row`
     rowEl.setAttribute("data-score", playerJSON.sortingScore)
@@ -23,7 +85,7 @@ function createStatsRowElement(playerJSON, rowData){
     rowEl.append(tagEl)
     
     const wsEl = document.createElement('td')
-    wsEl.innerText = playerJSON.api.player.stats.Bedwars.ws
+    wsEl.innerText = playerJSON.api.player.stats.Bedwars.winstreak
     rowEl.append(wsEl)
     
     const fkdrEl = document.createElement('td')
@@ -52,9 +114,15 @@ function createStatsRowElement(playerJSON, rowData){
 
 
 
-
 function navigateJSONforData(playerJSON, searchString){
 
+    const steps = searchString.split(".")
+    let piece = playerJSON
+    for(const step of steps){
+        piece = piece[step]
+    }
+    // console.log(`Piece: ${piece} - searching for ${searchString}`)
+    return piece
 }
 
 

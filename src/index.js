@@ -7,6 +7,7 @@ const { createStatsRowElement } = require("./playerRowFactory")
 
 const { readJSONFile } = require('./Test/jaxaarHelpers')
 
+const displayConfig = require("./displayConfig.json")
 let players = {}
 
 
@@ -68,7 +69,7 @@ async function main(){
         console.log(config)
 
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
-        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates'];
+        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel'];
         // fetchPlayer('Jaxaar')
         for (const player of igns) {
             const pjson = await fetchPlayer(player)
@@ -127,8 +128,9 @@ async function main(){
 
 
 function displayPlayer(playerJSON){
+    console.log(displayConfig)
     const displayEl = document.getElementById("statsRows")
-    const playerRowEl = createStatsRowElement(playerJSON, {})
+    const playerRowEl = createStatsRowElement(playerJSON, displayConfig)
 
     for(const row of displayEl.children){
         if(row.getAttribute("data-score") < playerJSON.sortingScore){

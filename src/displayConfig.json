@@ -1,15 +1,66 @@
 [
     {
+        "tag": "playerName",
+        "Title": "Player",
+        "activated": "true",
+        "unique": "true"
+    },
+    {
+        "tag": "tag",
+        "Title": "Tag",
+        "activated": "true",
+        "unique": "true"
+    },
+    {
         "tag": "WinStreak",
         "Title": "WS",
         "activated": "true",
-        "unique": "true"
+        "unique": "false",
+        "path": "api.player.stats.Bedwars.winstreak"
+    },
+    {
+        "tag": "FKDR",
+        "Title": "FKDR",
+        "activated": "true",
+        "unique": "false",
+        "ratio": {
+            "topPath": "api.player.stats.Bedwars.final_kills_bedwars",
+            "botPath": "api.player.stats.Bedwars.final_deaths_bedwars"
+        }
+    },
+    {
+        "tag": "WLR",
+        "Title": "WLR",
+        "activated": "true",
+        "unique": "false",
+        "ratio": {
+            "topPath": "api.player.stats.Bedwars.wins_bedwars",
+            "botPath": "api.player.stats.Bedwars.losses_bedwars"
+        }
+    },
+    {
+        "tag": "BBBL",
+        "Title": "BBBL",
+        "activated": "true",
+        "unique": "false",
+        "ratio": {
+            "topPath": "api.player.stats.Bedwars.beds_broken_bedwars",
+            "botPath": "api.player.stats.Bedwars.beds_lost_bedwars"
+        }
+    },
+    {
+        "tag": "Finals",
+        "Title": "Finals",
+        "activated": "true",
+        "unique": "false",
+        "path": "api.player.stats.Bedwars.final_kills_bedwars"
+    },
+    {
+        "tag": "Wins",
+        "Title": "Wins",
+        "activated": "true",
+        "unique": "false",
+        "path": "api.player.stats.Bedwars.wins_bedwars"
+
     }
-
-
-
-
-
-
-
 ]
