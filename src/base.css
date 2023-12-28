@@ -239,3 +239,21 @@ p{
     filter: drop-shadow(2px 2px rgb(0, 0, 0));
     /* background: blue; */
 }
+
+
+[data-avatar="nickQuestionMark"]{
+    background-image: url(../assets/questionmark.png);
+    background-repeat: no-repeat;
+    /* background-position: left;
+    background-position-x: center; */
+    background-size: 20px;
+    padding-left: 22px;
+}
+
+[data-avatar="notNick"]{
+    background-repeat: no-repeat;
+    /* background-position: left;
+    background-position-x: center; */
+    background-size: 20px;
+    padding-left: 22px;
+}

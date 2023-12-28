@@ -1,28 +1,32 @@
 [
     {
         "tag": "playerName",
-        "Title": "Player",
+        "title": "Player",
         "activated": "true",
-        "unique": "true"
+        "unique": "true",
+        "colWidth": "26.75%"
     },
     {
         "tag": "tag",
-        "Title": "Tag",
-        "activated": "true",
-        "unique": "true"
+        "title": "Tag",
+        "activated": "false",
+        "unique": "true",
+        "colWidth": "6%"
     },
     {
         "tag": "WinStreak",
-        "Title": "WS",
+        "title": "WS",
         "activated": "true",
         "unique": "false",
+        "colWidth": "6.5%",
         "path": "api.player.stats.Bedwars.winstreak"
     },
     {
         "tag": "FKDR",
-        "Title": "FKDR",
+        "title": "FKDR",
         "activated": "true",
         "unique": "false",
+        "colWidth": "9.5%",
         "ratio": {
             "topPath": "api.player.stats.Bedwars.final_kills_bedwars",
             "botPath": "api.player.stats.Bedwars.final_deaths_bedwars"
@@ -30,19 +34,21 @@
     },
     {
         "tag": "WLR",
-        "Title": "WLR",
+        "title": "WLR",
         "activated": "true",
-        "unique": "false",
+        "unique": "false",        
+        "colWidth": "7%",
         "ratio": {
             "topPath": "api.player.stats.Bedwars.wins_bedwars",
             "botPath": "api.player.stats.Bedwars.losses_bedwars"
         }
     },
     {
-        "tag": "BBBL",
-        "Title": "BBBL",
-        "activated": "true",
+        "tag": "BBLR",
+        "title": "BBLR",
+        "activated": "false",
         "unique": "false",
+        "colWidth": "7.25%",
         "ratio": {
             "topPath": "api.player.stats.Bedwars.beds_broken_bedwars",
             "botPath": "api.player.stats.Bedwars.beds_lost_bedwars"
@@ -50,16 +56,18 @@
     },
     {
         "tag": "Finals",
-        "Title": "Finals",
+        "title": "Finals",
         "activated": "true",
         "unique": "false",
+        "colWidth": "11.25%",
         "path": "api.player.stats.Bedwars.final_kills_bedwars"
     },
     {
         "tag": "Wins",
-        "Title": "Wins",
+        "title": "Wins",
         "activated": "true",
         "unique": "false",
+        "colWidth": "9%",
         "path": "api.player.stats.Bedwars.wins_bedwars"
 
     }

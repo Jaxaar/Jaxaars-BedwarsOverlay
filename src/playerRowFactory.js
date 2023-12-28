@@ -24,20 +24,16 @@ function createStatsRowElement(playerJSON, colData){
             rowEl.append(handleUniqueColumn(playerJSON, col))
             continue
         }
-        if(col.ratio){
+
+        if(playerJSON.api == undefined){
+            const el = document.createElement('td')
+            el.innerText = "-"
+            rowEl.append(el)
+        
+        }
+        else if(col.ratio){
             const el = document.createElement('td')
             const val = Math.round(navigateJSONforData(playerJSON, col.ratio.topPath) / navigateJSONforData(playerJSON, col.ratio.botPath) * 100)/100
-            // if(!val){
-            //     if(val === NaN){
-            //         el.innerText = navigateJSONforData(playerJSON, col.ratio.topPath)
-            //     }
-            //     else if (val == undefined){
-            //         el.innerText = "-"
-            //     }
-            // }
-            // else{
-            //     el.innerText = val
-            // }
             el.innerText = val ? val : "-"
             rowEl.append(el)
         }
@@ -55,8 +51,27 @@ function createStatsRowElement(playerJSON, colData){
 
 function handleUniqueColumn(playerJSON, col){
     if(col.tag == "playerName"){
+        // avatar = 'https://crafatar.com/avatars/ec561538f3fd461daff5086b22154bce?size=48&default=MHF_Steve&overlay'
+        // avatar = `https://crafatar.com/avatars/${players[i].api.uuid}?size=48&default=MHF_Steve&overlay`
         const playerEl = document.createElement('td')
-        playerEl.innerText = `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}`
+        const playerPortrait = document.createElement('span')
+        if(!playerJSON.api){
+            playerPortrait.setAttribute("data-avatar",  "nickQuestionMark")
+        }
+        else{
+            playerPortrait.setAttribute("data-avatar", "notNick")
+            playerPortrait.style.backgroundImage = `url(https://crafatar.com/avatars/${playerJSON.api.player.uuid}?size=48&default=MHF_Steve&overlay)`
+        }
+
+
+        const playerStars = document.createElement('span')
+        const playerName = document.createElement('span')
+        // style="background: url(${avatar}) no-repeat left center; background-size: 20px; padding-left: 25px;
+
+        playerName.innerText = playerJSON.api ? `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}` : playerJSON.name
+        playerEl.append(playerPortrait)
+        playerEl.append(playerStars)
+        playerEl.append(playerName)
         return playerEl
     }
     else if(col.tag == "tag"){
@@ -67,49 +82,6 @@ function handleUniqueColumn(playerJSON, col){
     else{
         return "NotHandled"
     }
-}
-
-function initialHardCoded(playerJSON){
-    const rowEl = document.createElement('tr')
-    rowEl.id = `${playerJSON.name}-row`
-    rowEl.setAttribute("data-score", playerJSON.sortingScore)
-
-
-    const playerEl = document.createElement('td')
-    playerEl.innerText = `[${playerJSON.api.player.achievements.bedwars_level}✫] ${playerJSON.name}`
-    rowEl.append(playerEl)
-
-    
-    const tagEl = document.createElement('td')
-    tagEl.innerText = "-"
-    rowEl.append(tagEl)
-    
-    const wsEl = document.createElement('td')
-    wsEl.innerText = playerJSON.api.player.stats.Bedwars.winstreak
-    rowEl.append(wsEl)
-    
-    const fkdrEl = document.createElement('td')
-    fkdrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.final_kills_bedwars / playerJSON.api.player.stats.Bedwars.final_deaths_bedwars * 100) / 100
-    rowEl.append(fkdrEl)
-    
-    const wlrEl = document.createElement('td')
-    wlrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.wins_bedwars / playerJSON.api.player.stats.Bedwars.losses_bedwars * 100)/ 100
-    rowEl.append(wlrEl)
-
-    const bbblrEl = document.createElement('td')
-    bbblrEl.innerText = Math.round(playerJSON.api.player.stats.Bedwars.beds_broken_bedwars / playerJSON.api.player.stats.Bedwars.beds_lost_bedwars * 100)/ 100
-    rowEl.append(bbblrEl)
-
-    const finalsEl = document.createElement('td')
-    finalsEl.innerText = playerJSON.api.player.stats.Bedwars.final_kills_bedwars
-    rowEl.append(finalsEl)
-
-    const winsEl = document.createElement('td')
-    winsEl.innerText = playerJSON.api.player.stats.Bedwars.wins_bedwars
-    rowEl.append(winsEl)
-
-
-    return rowEl
 }
 
 

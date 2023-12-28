@@ -20,6 +20,7 @@ async function main(){
     console.log(config.data.HYkey)
     verifyKey(config.data.HYkey)
 
+    setDisplayTitles()
 
     // Handle Control Buttons
 
@@ -69,7 +70,7 @@ async function main(){
         console.log(config)
 
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
-        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel'];
+        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG'];
         // fetchPlayer('Jaxaar')
         for (const player of igns) {
             const pjson = await fetchPlayer(player)
@@ -153,7 +154,24 @@ function clearDisplay(playerJSON){
     displayEl.innerHTML = ""
 }
 
+function setDisplayTitles(){
+    const displayHeaderEl = document.getElementById("statsHeaders")
+    displayHeaderEl.innerHTML = ""
+    for(const t of displayConfig){
+        if(t.activated == "false"){
+            continue
+        }
 
+        const el = document.createElement("th")
+        el.className = "titleitems"
+        el.style.width = `${t.colWidth}`
+        el.innerText = t.title
+        if(t.tag == "playerName"){
+            el.style.textAlign = "center"
+        }
+        displayHeaderEl.append(el)
+    }
+}
 
 // // Highlight context buttons
 // document.getElementById('settings').addEventListener('mouseenter', () => {
