@@ -9,7 +9,7 @@
     {
         "tag": "tag",
         "title": "Tag",
-        "activated": "false",
+        "activated": "true",
         "unique": "true",
         "colWidth": "6%"
     },

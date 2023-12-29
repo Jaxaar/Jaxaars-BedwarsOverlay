@@ -94,7 +94,7 @@ function handleUniqueColumn(playerJSON, col){
     }
     else if(col.tag == "tag"){
         const tagEl = document.createElement('td')
-        tagEl.innerText = "-"
+        tagEl.innerHTML = getTag(playerJSON.api.player)
         return tagEl
     }
     else{
@@ -235,6 +235,22 @@ function nameColor(api){
     else if (rank === 'VIP_PLUS') return `<span style="color: #55FF55;">[VIP</span><span style="color: #FFAA00;">+</span><span style="color: #55FF55;">] ${api.displayname}</span>`;
     else if (rank === 'VIP') return `<span style="color: #55FF55;">[VIP] ${api.displayname}</span>`;
     else return `<span style="color: #AAAAAA;">${api.displayname}</span>`;
+}
+
+function getTag(api, tagslist = []){
+
+    try{
+        if (api.inParty) return '<span style="color: #03C800">P</span>';
+        else if (api.call) return '<span style="color: #00C2A2">CALL</span>';
+        else if (api.partyReq) return '<span style="color: #37B836">PREQ</span>';
+        else if (api.friendReq) return '<span style="color: #D6D600">FREQ</span>';
+        else if (api.guildList) return '<span style="color: #36C700">GLD</span>';
+        else if (api.achievements.bedwars_level < 150 && api.stats.Bedwars.final_deaths_bedwars/api.stats.Bedwars.losses_bedwars < 0.75 && api.stats.Bedwars.final_kills_bedwars/api.stats.Bedwars.final_deaths_bedwars < 1.5) return '<span style="color: #FF5555">SNPR</span>';
+        else if ((api.achievements.bedwars_level < 15 && api.stats.Bedwars.final_kills_bedwars/api.stats.Bedwars.final_deaths_bedwars > 5) || (api.achievements.bedwars_level > 15 && api.achievements.bedwars_level < 100 && api.achievements.bedwars_level/(api.stats.Bedwars.final_kills_bedwars/api.stats.Bedwars.final_deaths_bedwars) <= 5)) return '<span style="color: #5555FF">ALT</span>';
+        else if (api.channel === 'PARTY') return '<span style="color: #FFB900">PRTY</span>';
+        else return '<span style="color: #AAAAAA">-</span>';
+    }
+    catch{return '<span style="color: #AAAAAA">-</span>';}
 }
 
 
