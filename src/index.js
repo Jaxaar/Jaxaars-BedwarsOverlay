@@ -58,19 +58,12 @@ async function main(){
 
     document.getElementById('session').addEventListener('click', () => {
         activateAPIKeyModal()
-        // if ($('#sessiondiv').css('display') === 'none'){
-        //     updateSession(startapi);
-        //     $('#session').css('background-image', 'url(../assets/session2.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none'); $('#infodiv').css('display', 'none'); $('#sessiondiv').css('display', 'inline-block'); $('#settingsdiv').css('display', 'none');
-        //     if (!useruuid) {
-        //         ModalWindow.open({ title: 'Missing username', type: -2, content: 'The session stats feature is <b>NOT available</b> without your Minecraft username! <ul><li style="height: auto">Enter your IGN in overlay settings</li></ul>' });
-        //     }
-        // }
-        // else{
-        //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
-        // }
     });
     document.getElementById('info').addEventListener('click', () => {
         openLogPathWindow()
+    });
+    document.getElementById('settings').addEventListener('click', () => {
+        toggleSettings()
     });
 
     document.addEventListener("badAPIKey", () => {
@@ -129,6 +122,19 @@ async function main(){
     }
 }
 
+function toggleSettings(){
+
+    const sdEl = document.getElementById('settingsDisplay')
+    const settingsContainerEl = document.getElementById("settingsDisplay")
+    if(settingsContainerEl.classList.contains("hidden")){
+        sdEl.classList.add("settingsActive")
+        settingsContainerEl.classList.remove("hidden")
+    }
+    else{
+        sdEl.classList.remove("settingsActive")
+        settingsContainerEl.classList.add("hidden")
+    }
+}
 
 
 function displayPlayer(playerJSON){
@@ -175,20 +181,6 @@ function setDisplayTitles(){
         displayHeaderEl.append(el)
     }
 }
-
-// // Highlight context buttons
-// document.getElementById('settings').addEventListener('mouseenter', () => {
-//     if ($('#settingsdiv').css('display') === 'none'){
-//         $('#settings').css('background-image', 'url(../assets/settings2.png)');
-//     }
-// }).addEventListener('mouseleave', () => {
-//     if ($('#settingsdiv').css('display') === 'none'){
-//         $('#settings').css('background-image', 'url(../assets/settings1.png)');
-//     }
-// });
-
-
-
 
 
 document.addEventListener("DOMContentLoaded", () =>{
@@ -238,17 +230,6 @@ function handleLogLine(data, state){
         for (p of playersInLobby){
             addPlayer(p, copyOfPlayers[p])
         }
-
-            // if (w.indexOf('[') !== -1) w = w = w.substring(0, w.indexOf('[')-1);
-            // for (let j = 0; j < players.length; j++){
-            //     if (players[j].name === who[i]) contains = true;
-            // }
-        //     if(!players[w]){
-        //         addPlayer(w)
-        //     }
-        // }
-        // for (let i = 0; i < players.length; i++){
-        //     if (!who.includes(players[i].name)){players.splice(i, 1); changed = true; updateArray();}
     }
     else if (msg.includes('has joined') && !msg.includes(':')){
         addPlayer(msg.split(' ')[0])
@@ -411,7 +392,7 @@ async function clipboardKey() {
 }
 
 async function openLogPathWindow(){
-    config = JSON.parse(await ipcRenderer.invoke('setTempPath'))
+    ipcRenderer.invoke('setLogPath')
 }
 
 
