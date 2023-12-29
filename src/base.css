@@ -271,7 +271,9 @@ body::-webkit-scrollbar{
     margin: 4px;
 }
 
-
+.wsMissing{
+    color: #AA0000;
+}
 
 
 

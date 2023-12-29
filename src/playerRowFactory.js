@@ -43,6 +43,12 @@ function createStatsRowElement(playerJSON, colData){
             const el = document.createElement('td')
             const val = navigateJSONforData(playerJSON, col.path)
             el.innerText = val ? val : "-"
+
+            if(col.tag == "WinStreak" && !val) {
+                el.innerText = "?"
+                el.classList.add("wsMissing")
+            }
+
             el.classList.add(getColorClass(val, col))
             rowEl.append(el)
         }
@@ -94,7 +100,7 @@ function handleUniqueColumn(playerJSON, col){
     }
     else if(col.tag == "tag"){
         const tagEl = document.createElement('td')
-        tagEl.innerHTML = getTag(playerJSON.api.player)
+        tagEl.innerHTML = getTag(playerJSON?.api?.player)
         return tagEl
     }
     else{
@@ -240,7 +246,8 @@ function nameColor(api){
 function getTag(api, tagslist = []){
 
     try{
-        if (api.inParty) return '<span style="color: #03C800">P</span>';
+        if (!api) return '<span style="color: #F3FF00">NICK</span>'
+        else if (api.inParty) return '<span style="color: #03C800">P</span>';
         else if (api.call) return '<span style="color: #00C2A2">CALL</span>';
         else if (api.partyReq) return '<span style="color: #37B836">PREQ</span>';
         else if (api.friendReq) return '<span style="color: #D6D600">FREQ</span>';
