@@ -1,4 +1,4 @@
-const { shell, clipboard, ipcRenderer } = require('electron');
+const { shell, clipboard, ipcRenderer, dialog } = require('electron');
 const Tail = require('tail').Tail;
 const fs = require('fs');
 
@@ -21,6 +21,10 @@ async function main(){
     // config = JSON.parse(await ipcRenderer.invoke('setConfigField', "test123", 123456))
     console.log(config)
     verifyKey(config.data.HYkey)
+
+    // if(!config.data.logPath){
+    //     activateLogSelectorModal()
+    // }
 
     setDisplayTitles()
 
@@ -65,6 +69,9 @@ async function main(){
         //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
         // }
     });
+    document.getElementById('info').addEventListener('click', () => {
+        openLogPathWindow()
+    });
 
     document.addEventListener("badAPIKey", () => {
         if(goodHypixelKey){
@@ -107,25 +114,11 @@ async function main(){
             }
             for(const line of s){
                 handleLogLine(line, state)
-                // console.log(state)
             }
         }
-
-        //ipcRenderer.send('autowho');
-
-        // MODAL WINDOW USAGE
-        // ModalWindow.open({
-        //     title: 'Hello modal window',
-        //     content: 'Please tell me this modal window actually worked dude. I tried something new with JS and am hoping this works first try', // optional
-        //     type: 1 // 1 for success, -1 for error, -2 for warning, leave blank for general info
-        // });
     });
 
     const logPath = config.data.logPath
-
-    // console.log(logPath)
-    // console.log("C:/Users/jax16/curseforge/minecraft/Instances/1.8.9 QOL/logs")
-    // console.log(fs.existsSync("C:/Users/jax16/curseforge/minecraft/Instances/1.8.9 QOL/logs"))
 
 
     if (fs.existsSync(logPath)) {
@@ -416,6 +409,11 @@ async function clipboardKey() {
     return await verifyKey(copied)
     // Set key in config
 }
+
+async function openLogPathWindow(){
+    config = JSON.parse(await ipcRenderer.invoke('setTempPath'))
+}
+
 
 function closeModal(){
     const modalPiece = document.getElementsByClassName("modal-part")

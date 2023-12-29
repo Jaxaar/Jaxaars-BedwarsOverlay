@@ -1,4 +1,4 @@
-const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron')
+const { app, BrowserWindow, globalShortcut, ipcMain, dialog } = require('electron')
 // const homedir = app.getPath('home').replaceAll('\\', '/');
 const {path} = require('path')
 const { createConfig } = require("./src/configHandler")
@@ -167,4 +167,13 @@ ipcMain.handle('getConfigObj', (event) => {
 ipcMain.handle('setConfigField', (event, fieldName, value) => {
     config.set(fieldName, value)
     return JSON.stringify(config)
+})
+
+ipcMain.handle('setTempPath', (event) => {
+    let path = dialog.showOpenDialogSync({title: 'Select latest.log file', buttonLabel: 'Select log file', filters: [{name: 'Latest log', extensions: ['log']}]});
+    if(path){
+        config.set("logPath", path[0])
+    }
+    app.relaunch(); app.exit(0); app.quit();
+    // return JSON.stringify(config)
 })
