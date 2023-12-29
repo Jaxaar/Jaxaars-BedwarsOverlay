@@ -7,15 +7,16 @@ const { createStatsRowElement } = require("./playerRowFactory")
 
 const { readJSONFile } = require('./Test/jaxaarHelpers')
 
-const displayConfig = require("./displayConfig.json")
+const displayConfig = require("./displayConfig.json");
 let players = {}
+let config = {}
 let goodHypixelKey = true
 
 
 
 async function main(){
 
-    let config = JSON.parse(await ipcRenderer.invoke('getConfigObj'))
+    config = JSON.parse(await ipcRenderer.invoke('getConfigObj'))
 
     // config = JSON.parse(await ipcRenderer.invoke('setConfigField', "test123", 123456))
     console.log(config)
@@ -51,22 +52,25 @@ async function main(){
         }
     });
 
-    // document.getElementById('session').addEventListener('click', () => {
-    //     // if ($('#sessiondiv').css('display') === 'none'){
-    //     //     updateSession(startapi);
-    //     //     $('#session').css('background-image', 'url(../assets/session2.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none'); $('#infodiv').css('display', 'none'); $('#sessiondiv').css('display', 'inline-block'); $('#settingsdiv').css('display', 'none');
-    //     //     if (!useruuid) {
-    //     //         ModalWindow.open({ title: 'Missing username', type: -2, content: 'The session stats feature is <b>NOT available</b> without your Minecraft username! <ul><li style="height: auto">Enter your IGN in overlay settings</li></ul>' });
-    //     //     }
-    //     // }
-    //     // else{
-    //     //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
-    //     // }
-    // });
-
+    document.getElementById('session').addEventListener('click', () => {
+        activateAPIKeyModal()
+        // if ($('#sessiondiv').css('display') === 'none'){
+        //     updateSession(startapi);
+        //     $('#session').css('background-image', 'url(../assets/session2.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none'); $('#infodiv').css('display', 'none'); $('#sessiondiv').css('display', 'inline-block'); $('#settingsdiv').css('display', 'none');
+        //     if (!useruuid) {
+        //         ModalWindow.open({ title: 'Missing username', type: -2, content: 'The session stats feature is <b>NOT available</b> without your Minecraft username! <ul><li style="height: auto">Enter your IGN in overlay settings</li></ul>' });
+        //     }
+        // }
+        // else{
+        //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
+        // }
+    });
 
     document.addEventListener("badAPIKey", () => {
-        activateAPIKeyModal()
+        if(goodHypixelKey){
+            goodHypixelKey = false
+            activateAPIKeyModal()
+        }
     })
 
 
@@ -369,10 +373,70 @@ async function removePlayer(playerName){
 }
 
 function activateAPIKeyModal(){
-    goodHypixelKey = false
-    console.log("hi")
+    console.log("Activating and Loading modal...")
+    console.log(document.getElementById("modal"))
+    setModal(`
+        <p>BARS Overlay requires using a developer hypixel api key, and yours is currently invalid.</p>
+        <ul>
+            <li style="height: auto">Generate a new API key <a id="hy-dev-portal" href="">here</a> and paste it below.</li>
+            <li style="height: auto">For more information, follow <a id="api-key-guide" href="">this</a> guide. (Thx Abyss Overlay)</li>
+        </ul>
+        <div id="modal-error" class="modal-error hidden">Invalid Key</div>
+        <input type="text" class="api_key__input" id="modal_api_key" name="Hypixel API Key" maxlength="36" size="36" placeholder="Click to paste API key">               
+        <button id="modal-close" class="modal-close">Handle Later</button>
+    `)
+    console.log(document.getElementById("modal"))
+    openModal()
+
+    console.log(document.getElementById("modal"))
+    document.getElementById("modal-close").addEventListener("click", () =>{ closeModal()})
+    document.getElementById('hy-dev-portal').addEventListener("click", ()=> { shell.openExternal('https://developer.hypixel.net/dashboard')})
+    document.getElementById('api-key-guide').addEventListener("click", ()=> { shell.openExternal('https://github.com/Chit132/abyss-overlay/wiki/Hypixel-API-Keys-Guide')})
+    document.getElementById('modal_api_key').addEventListener("click", async ()=> {
+        const validKey = await clipboardKey() 
+        if(!validKey){
+            document.getElementById('modal-error').classList.remove("hidden")
+         }
+         else{
+            closeModal()
+            config = JSON.parse(await ipcRenderer.invoke('setConfigField', "HYkey", validKey))
+        }
+    })
+
 }
 
+async function clipboardKey() {
+    let copied = clipboard.readText()
+    if (copied){ 
+        copied = copied.replace(/\s/g, '')
+    }
+    if (copied.length !== 36) {
+        return false
+    }
+    return await verifyKey(copied)
+    // Set key in config
+}
+
+function closeModal(){
+    const modalPiece = document.getElementsByClassName("modal-part")
+    for(const el of modalPiece){
+        el.classList.add("hidden")
+    }
+}
+
+function openModal(){
+    console.log("Open")
+    const modalPiece = document.getElementsByClassName("modal-part")
+    for(const el of modalPiece){
+        el.classList.remove("hidden")
+    }
+}
+
+function setModal(contents){
+    console.log("set")
+    const modal = document.getElementById("modal")
+    modal.innerHTML = contents
+}
 
 module.exports = {
     handleLogLine

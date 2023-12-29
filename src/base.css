@@ -45,12 +45,6 @@ body::-webkit-scrollbar{
     background-color: transparent;
 }
 
-p{
-    font-size: "100px";
-    color: white;
-    font-family: "Minecraftia";
-}
-
 .menu{
     background: rgba(2, 2, 2, 0.199);
     -webkit-app-region: drag;
@@ -275,4 +269,75 @@ p{
 }
 .starsDisplay{
     margin: 4px;
+}
+
+
+
+
+
+
+
+
+
+#modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 60%;
+    padding: 1.3rem;
+    min-height: 250px;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    z-index: 2;
+  }
+  
+  #modal .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  
+  .api_key__input {
+    font-family: "Minecraftia";
+    color: rgb(185, 185, 185);
+    border: 2px solid #8f0000;
+    background: rgba(82, 82, 82, 0.582);
+    text-align: center;
+}
+.api_key__input:hover {
+    /* text-shadow: none !important;
+    color: white !important; */
+    border: 2px solid #dc0000;
+    cursor: copy;
+}
+
+.row{
+    display: flex;
+}
+
+.modal-error{
+    color: red;
 }

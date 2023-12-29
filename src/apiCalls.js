@@ -1,5 +1,3 @@
-
-
 const HY_API = 'https://api.hypixel.net/v2'
 // const HY_HEADER = { 'API-Key': config.get('key', '1') };
 const HY_HEADER = { 'api-key': '' };
@@ -27,8 +25,10 @@ async function verifyKey(key) {
     if (!data.ok) {
         document.dispatchEvent(new Event("badAPIKey"))
         goodkey = false;
+        return false
     }
     goodkey = true;
+    return key
     // config['api-key'] = HY_HEADER['api-key']
 }
 
