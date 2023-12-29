@@ -25,6 +25,7 @@ async function verifyKey(key) {
     HY_HEADER['api-key'] = header['api-key']
 
     if (!data.ok) {
+        document.dispatchEvent(new Event("badAPIKey"))
         goodkey = false;
     }
     goodkey = true;
@@ -52,6 +53,9 @@ async function fetchPlayer(ign, options = {}) {
     const mcData = await fetchPlayerMinecraftData(ign)
 
     if (!goodkey || !mcData) {
+        // if(!goodkey){
+        //     document.dispatchEvent(new Event("badAPIKey"))
+        // }
         return {
             name: ign,
             api: undefined,

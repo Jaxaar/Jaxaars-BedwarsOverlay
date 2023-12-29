@@ -1,11 +1,11 @@
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron')
 // const homedir = app.getPath('home').replaceAll('\\', '/');
 const {path} = require('path')
-const { Config } = require("./src/configHandler")
+const { createConfig } = require("./src/configHandler")
 
 
 const isDev = require('electron-is-dev');
-const config =  new Config(`${app.getPath('userData')}/config.json`, {'ign': null, 'HYkey': ''})
+const config =  createConfig(`${app.getPath('userData')}/config.json`, {'ign': null, 'HYkey': ''})
 let win
 let keybinds = {}
 let through = false
@@ -161,5 +161,10 @@ ipcMain.handle('toggleShow', (event, height) => {
 
 
 ipcMain.handle('getConfigObj', (event) => {
-    return config
+    return JSON.stringify(config)
+})
+
+ipcMain.handle('setConfigField', (event, fieldName, value) => {
+    config.set(fieldName, value)
+    return JSON.stringify(config)
 })

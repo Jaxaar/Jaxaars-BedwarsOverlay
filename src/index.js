@@ -9,15 +9,16 @@ const { readJSONFile } = require('./Test/jaxaarHelpers')
 
 const displayConfig = require("./displayConfig.json")
 let players = {}
-
+let goodHypixelKey = true
 
 
 
 async function main(){
 
-    const config = await ipcRenderer.invoke('getConfigObj')
+    let config = JSON.parse(await ipcRenderer.invoke('getConfigObj'))
+
+    // config = JSON.parse(await ipcRenderer.invoke('setConfigField', "test123", 123456))
     console.log(config)
-    console.log(config.data.HYkey)
     verifyKey(config.data.HYkey)
 
     setDisplayTitles()
@@ -62,6 +63,11 @@ async function main(){
     //     //     $('#session').css('background-image', 'url(../assets/session1.png)'); $('#info').css('background-image', 'url(../assets/info1.png)'); $('#music').css('background-image', 'url(../assets/music1.png)'); $('#settings').css('background-image', 'url(../assets/settings1.png)'); $('#infodiv').css('display', 'none'); $('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block'); $('#sessiondiv').css('display', 'none'); $('#settingsdiv').css('display', 'none');
     //     // }
     // });
+
+
+    document.addEventListener("badAPIKey", () => {
+        activateAPIKeyModal()
+    })
 
 
     ipcRenderer.on('test', async (event, ...arg) => {
@@ -360,6 +366,11 @@ async function removePlayer(playerName){
     delete players[playerName]
     // console.log(players)
 
+}
+
+function activateAPIKeyModal(){
+    goodHypixelKey = false
+    console.log("hi")
 }
 
 
