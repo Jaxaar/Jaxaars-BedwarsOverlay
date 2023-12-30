@@ -15,6 +15,7 @@ function createConfig(filePath, obj = {}){
 
     config.set = function (key, value){
         this.data[key] = value
+        console.log(this.data)
         saveJSONFile(this.file, this.data)
         return value
     }

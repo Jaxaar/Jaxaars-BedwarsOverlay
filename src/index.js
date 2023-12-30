@@ -13,6 +13,10 @@ let config = {}
 let goodHypixelKey = true
 
 
+const flags = {
+    finals: true
+}
+
 
 async function main(){
 
@@ -120,10 +124,11 @@ async function main(){
     });
 
     const logPath = config.data.logPath
+    console.log(logPath)
 
 
     if (fs.existsSync(logPath)) {
-        monitorLogFile(`${logPath}/latest.log`)
+        monitorLogFile(`${logPath}`)
     }
     else{
         console.log("LogPath DNE")
@@ -255,72 +260,66 @@ function handleLogLine(data, state){
         players = {}
         clearDisplay()
     }
-    else if ((msg.includes('FINAL KILL') || msg.includes('disconnected')) && !msg.includes(':')){
-        removePlayer(msg.split(' ')[0])
+    // else if ((msg.includes('FINAL KILL') || msg.includes('disconnected')) && !msg.includes(':')){
+    //     removePlayer(msg.split(' ')[0])
+    // }
+
+    // Detecting Game start
+    else if(msg.includes("The game starts in 1 second!") && !msg.includes(":")){
+        // Update state vars
+        state.gameStarting = true
+    }
+    // Verify it actual started
+    else if(state.gameStarting && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
+        // Update state vars
+        state.gameStarting = false
+        state.gameStarted = true
+    }
+    // Verify it's bedwars starting
+    else if(state.gameStarted && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
+        // Update state vars
+        state.gameStarted = false
+        state.gameRunning = true
+        // Determine gamemode
+        // if(msg.replace(" ", "") === "BedWars"){
+        //     this.bools.normalMode = true
+        // }
+        // else{
+        //     this.bools.dreamMode = true
+        // }
+        state.normalMode = true
+
+        // Log the players who are in the game
+        logPlayers(players)
+    } 
+    
+    // Catch mid game events
+    else if (flags.finals && msg.includes('FINAL KILL') && !msg.includes(":")){
+        handleFinals(msg)
+    }
+    else if (msg.includes("BED DESTRUCTION") && msg.includes("Your Bed") && !msg.includes(":")){
+        handleBedsBroken(msg)
     }
 
-    // if(msg.includes("Testing1234") && msg.includes("Testing1234")){
-    //     console.log("Testing" + msg)
-    //     testing()
-    // }
+    // Detect Game end (Assuming still in lobby)
+    else if(state.gameRunning && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
+        // Update state vars
+        state.gameEnding = true
+    }
+    // Verify Game end
+    else if (state.gameEnding && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
+        state.gameEnding = false
+        state.gameRunning = false
+        state.gameEnded = true
+    }
 
-
-    // else if(msg.includes("The game starts in 1 second!") && !msg.includes(":")){
-    //     // Update state vars
-    //     this.bools.gameStarting = true
-    // }
-    // // Verify it actual started
-    // else if(this.bools.gameStarting && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
-    //     // Update state vars
-    //     this.bools.gameStarting = false
-    //     this.bools.gameStarted = true
-    // }
-    // // Verify it's bedwars starting
-    // else if(this.bools.gameStarted && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
-    //     // Update state vars
-    //     this.bools.gameStarted = false
-    //     this.bools.gameRunning = true
-    //     // Determine gamemode
-    //     // if(msg.replace(" ", "") === "BedWars"){
-    //     //     this.bools.normalMode = true
-    //     // }
-    //     // else{
-    //     //     this.bools.dreamMode = true
-    //     // }
-    //     this.bools.normalMode = true
-
-    //     // Log the players who are in the game
-    //     this.logPlayers(players)
-
-    // } 
-    
-    // // Catch mid game events
-    // else if (this.flags.finals && msg.includes('FINAL KILL') && !msg.includes(":")){
-    //     this.handleFinals(msg)
-    // }
-    // else if (msg.includes("BED DESTRUCTION") && msg.includes("Your Bed") && !msg.includes(":")){
-    //     this.handleBedsBroken(msg)
-    // }
-
-    // // Detect Game end (Assuming still in lobby)
-    // else if(this.bools.gameRunning && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
-    //     // Update state vars
-    //     this.bools.gameEnding = true
-    // }
-    // // Verify Game end
-    // else if (this.bools.gameEnding && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
-    //     this.bools.gameEnding = false
-    //     this.bools.gameRunning = false
-    //     this.bools.gameEnded = true
-    // }
-
-    // // Game end WIP
-    // else if (this.bools.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
-    //     this.bools.gameEnded = false
-    // }
-    // else if (this.bools.gameEnded && msg.includes("Slumber Tickets! (Win)")){
-    //     this.bools.gameEnded = false
-    // }
+    // Game end WIP
+    else if (state.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
+        state.gameEnded = false
+    }
+    else if (state.gameEnded && msg.includes("Slumber Tickets! (Win)")){
+        state.gameEnded = false
+    }
 }
 
 // async function testing(){
@@ -423,6 +422,19 @@ function setModal(contents){
     console.log("set")
     const modal = document.getElementById("modal")
     modal.innerHTML = contents
+}
+
+
+function logPlayers(){
+
+}
+
+function handleFinals(){
+
+}
+
+function handleBedsBroken(){
+
 }
 
 module.exports = {
