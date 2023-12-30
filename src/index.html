@@ -18,8 +18,8 @@
                 <h1 class="menuitem" id="logo_title">BARS Overlay</h1>
                 <!--add tooltips for buttons-->
                 <!-- <img src="" id="clientimg"> -->
-                <button name="Information" class="menuitem tabsbuttons" id="info"></button>
-                <button name="Session" class="menuitem tabsbuttons" id="session"></button>
+                <!-- <button name="Information" class="menuitem tabsbuttons" id="info"></button> -->
+                <!-- <button name="Session" class="menuitem tabsbuttons" id="session"></button> -->
                 <button name="Settings" class="menuitem tabsbuttons" id="settings"></button>
                 <!-- <button name="Update" class="menuitem" id="update"></button> -->
                 <button name="Quit" class="menuitem" id="quit"></button>
@@ -42,8 +42,13 @@
                     </tbody>
                 </table>
             </div>
-            <div id="settingsDisplay" class="pageitem hidden">
+            <div id="settingsContainer" class="pageitem hidden">
                 <div class="settings-overlay "></div>
+                <div id="settingsDisplay">
+                    <p>Set log file to be watched (Will restart the overlay)</p>
+                    <button id="open-log-window">Select Log file</button>
+                    <button id="api-key-modal-trigger">Open API Key popup</button>
+                </div>
             </div>
             <div>
                 <section id="modal" class="modal-part hidden">

@@ -116,7 +116,7 @@ body::-webkit-scrollbar{
     background-image: url("../assets/settings1.png");
 }
 #settings:hover, .settingsActive{
-    background-image: url("../assets/settings2.png");
+    background-image: url("../assets/settings2.png") !important;
 }
 
 #update{
@@ -295,7 +295,7 @@ body::-webkit-scrollbar{
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 15px;
-    z-index: 2;
+    z-index: 200;
   }
   
   #modal .flex {
@@ -314,7 +314,7 @@ body::-webkit-scrollbar{
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
-    z-index: 1;
+    z-index: 199;
   }
 
   .hidden {
@@ -356,4 +356,16 @@ body::-webkit-scrollbar{
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
     z-index: 1;
+}
+
+#settingsDisplay{
+    width: calc(90% - 2.6rem);
+    padding: 1.3rem;
+    height: calc(100% - 35px);
+    position: absolute;
+    top: calc(35px + 5%);
+    left: 5%;
+    color: white;
+    /* border: 1px solid #ddd; */
+    z-index: 2;
 }

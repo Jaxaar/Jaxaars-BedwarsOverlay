@@ -56,14 +56,22 @@ async function main(){
         }
     });
 
-    document.getElementById('session').addEventListener('click', () => {
-        activateAPIKeyModal()
-    });
-    document.getElementById('info').addEventListener('click', () => {
-        openLogPathWindow()
-    });
+    // document.getElementById('session').addEventListener('click', () => {
+
+    // });
+    // document.getElementById('info').addEventListener('click', () => {
+
+    // });
     document.getElementById('settings').addEventListener('click', () => {
         toggleSettings()
+    });
+
+    document.getElementById('open-log-window').addEventListener('click', () => {
+        openLogPathWindow()
+    });
+
+    document.getElementById('api-key-modal-trigger').addEventListener('click', () => {
+        activateAPIKeyModal()
     });
 
     document.addEventListener("badAPIKey", () => {
@@ -124,8 +132,8 @@ async function main(){
 
 function toggleSettings(){
 
-    const sdEl = document.getElementById('settingsDisplay')
-    const settingsContainerEl = document.getElementById("settingsDisplay")
+    const sdEl = document.getElementById('settings')
+    const settingsContainerEl = document.getElementById("settingsContainer")
     if(settingsContainerEl.classList.contains("hidden")){
         sdEl.classList.add("settingsActive")
         settingsContainerEl.classList.remove("hidden")
@@ -315,11 +323,11 @@ function handleLogLine(data, state){
     // }
 }
 
-async function testing(){
-    const data = await fetchPlayer("Jaxaar")
-    console.log("Data: ")
-    console.log(data)
-}
+// async function testing(){
+//     const data = await fetchPlayer("Jaxaar")
+//     console.log("Data: ")
+//     console.log(data)
+// }
 
 async function addPlayer(playerName, data){
     if(players[playerName]){

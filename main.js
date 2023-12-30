@@ -173,7 +173,7 @@ ipcMain.handle('setLogPath', (event) => {
     let path = dialog.showOpenDialogSync({title: 'Select latest.log file', buttonLabel: 'Select log file', filters: [{name: 'Latest log', extensions: ['log']}]});
     if(path){
         config.set("logPath", path[0])
+        app.relaunch(); app.exit(0); app.quit();
     }
-    app.relaunch(); app.exit(0); app.quit();
     // return JSON.stringify(config)
 })
