@@ -123,6 +123,12 @@ async function main(){
         }
     });
 
+    ipcRenderer.on('clear', async (event, ...arg) => {
+        players = {}
+        clearDisplay()
+
+    })
+
     const logPath = config.data.logPath
     console.log(logPath)
 

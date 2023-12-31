@@ -2,6 +2,8 @@ const { app, BrowserWindow, globalShortcut, ipcMain, dialog } = require('electro
 // const homedir = app.getPath('home').replaceAll('\\', '/');
 const {path} = require('path')
 const { createConfig } = require("./src/configHandler")
+const { createPlayerRecord } = require("./src/playerData")
+
 
 
 const isDev = require('electron-is-dev');
@@ -9,6 +11,7 @@ const config =  createConfig(`${app.getPath('userData')}/config.json`, {'ign': n
 let win
 let keybinds = {}
 let through = false
+const playerRecord =  createPlayerRecord(`${app.getPath('userData')}/playerRecord.json`, {})
 
 
 
@@ -85,7 +88,11 @@ app.on('window-all-closed', () => {
 })
 
 
-
+app.on('before-quit', () => {
+    console.log("Quitting...")
+    playerRecord.save()
+    config.save()
+});
 
 
 
@@ -173,7 +180,11 @@ ipcMain.handle('setLogPath', (event) => {
     let path = dialog.showOpenDialogSync({title: 'Select latest.log file', buttonLabel: 'Select log file', filters: [{name: 'Latest log', extensions: ['log']}]});
     if(path){
         config.set("logPath", path[0])
-        // app.relaunch(); app.exit(0); app.quit();
+        app.relaunch(); app.exit(0); app.quit();
     }
     // return JSON.stringify(config)
+})
+
+ipcMain.handle('getPlayerRecordObj', (event) => {
+    return JSON.stringify(playerRecord)
 })
