@@ -10,17 +10,22 @@ const { readJSONFile } = require('./Test/jaxaarHelpers')
 const displayConfig = require("./displayConfig.json");
 let players = {}
 let config = {}
+let playerRecord = {}
 let goodHypixelKey = true
 
 
 const flags = {
-    finals: true
+    "finals": true,
+    "usersBedBroken": true,
+    "testingMode": false,
 }
 
 
 async function main(){
 
     config = JSON.parse(await ipcRenderer.invoke('getConfigObj'))
+    playerRecord = JSON.parse(await ipcRenderer.invoke('getPlayerRecordObj'))
+
 
     // config = JSON.parse(await ipcRenderer.invoke('setConfigField', "test123", 123456))
     console.log(config)
@@ -103,12 +108,14 @@ async function main(){
 
         console.log("Running test file...")
 
+        flags.testingMode = true
+
         const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
 
         if (!gameChatJSON) return
-    
+        console.log(gameChatJSON)
         for(let s of gameChatJSON.chat){
-            s = "[22:01:15] [Client thread/INFO]: [CHAT]" + s 
+            
             const state = {
                 inGameLobby: false,
                 gameStarting: false,
@@ -117,10 +124,13 @@ async function main(){
                 gameEnding: false,
                 gameEnded: false,
             }
-            for(const line of s){
+            for(let line of s){
+                line = "[22:01:15] [Client thread/INFO]: [CHAT] " + line 
                 handleLogLine(line, state)
             }
         }
+        flags.testingMode = false
+
     });
 
     ipcRenderer.on('clear', async (event, ...arg) => {
@@ -238,9 +248,8 @@ function handleLogLine(data, state){
     const k = data.indexOf('[CHAT]');
     const msg = data.substring(k+7).replace(/(§|�)([0-9]|a|b|e|d|f|k|l|m|n|o|r|c)/gm, '');
 
-    // const msg = data
+    console.log(msg)
 
-    // console.log(msg)
     if (msg.includes('ONLINE:') && msg.includes(',')){
         let playersInLobby = msg.substring(8).split(', ');
         const copyOfPlayers = players
@@ -320,11 +329,14 @@ function handleLogLine(data, state){
     }
 
     // Game end WIP
-    else if (state.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
-        state.gameEnded = false
-    }
+    // else if (state.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
+    //     state.gameEnded = false
+    //     ipcRenderer.invoke("savePlayerRecordObj", playerRecord)
+    // }
     else if (state.gameEnded && msg.includes("Slumber Tickets! (Win)")){
         state.gameEnded = false
+        console.log(playerRecord)
+        ipcRenderer.invoke("savePlayerRecordObj", playerRecord)
     }
 }
 
@@ -432,15 +444,49 @@ function setModal(contents){
 
 
 function logPlayers(){
+    for(const p in players){
+        const player = p.name.toLowerCase()
+        // this.currentPlayers.push(player)
 
+        if(this.verifyPlayer(player)){
+            playerRecord.players[player].gamesPlayed = playerRecord.players[player].gamesPlayed ? playerRecord.players[player].gamesPlayed + 1 : 1
+        }
+    }
 }
 
-function handleFinals(){
+function handleFinals(msg){
+    const died = msg.split(' ')[0].toLowerCase();
+    const killer = msg.split(' ')[msg.split(' ').length-3].replace(".", "").replace("?", "").replace("!", "").toLowerCase(); //Find a better replace method
 
+    if(died == this.user){
+        verifyPlayer(killer)
+        playerRecord.players[killer].FinaledYou = playerRecord.players[killer].FinaledYou ? 1 + playerRecord.players[killer].FinaledYou : 1
+    }
+    else if(killer == this.user){
+        verifyPlayer(died)
+        playerRecord.players[died].YouFinaled = playerRecord.players[died].YouFinaled ? 1 + playerRecord.players[died].YouFinaled : 1
+    }
 }
 
-function handleBedsBroken(){
+function handleBedsBroken(msg){
+    if(flags.usersBedBroken){
+        const breaker = msg.split(' ')[msg.split(' ').length-1].replace(".", "").replace("?", "").replace("!", "").toLowerCase(); //Find a better replace method
+        verifyPlayer(breaker)
+        playerRecord.players[breaker].brokeYourBed = playerRecord.players[breaker].brokeYourBed ? 1 + playerRecord.players[breaker].brokeYourBed : 1
+    }
+}
 
+function verifyPlayer(player){
+    if(playerRecord.players[player]){
+        return true
+    }
+    else{
+        playerRecord.players[player] = {
+            "name": player,
+            "gamesPlayed": 1,
+        }
+        return false
+    }
 }
 
 module.exports = {

@@ -27,8 +27,12 @@ function createPlayerRecord(filePath, obj = {}){
         // return val || alt
     }
 
-    playerRecord.save = function (){
-        saveJSONFile(this.file, this.players) 
+    playerRecord.save = function (obj){
+        saveJSONFile(obj || this.file, this.players) 
     }
     return playerRecord
+}
+
+module.exports = {
+    createPlayerRecord
 }

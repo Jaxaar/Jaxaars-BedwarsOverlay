@@ -11,7 +11,7 @@ const config =  createConfig(`${app.getPath('userData')}/config.json`, {'ign': n
 let win
 let keybinds = {}
 let through = false
-const playerRecord =  createPlayerRecord(`${app.getPath('userData')}/playerRecord.json`, {})
+const playerRecord =  createPlayerRecord(`${app.getPath('userData')}/playerRecord.json`, {"players": {}})
 
 
 
@@ -187,4 +187,12 @@ ipcMain.handle('setLogPath', (event) => {
 
 ipcMain.handle('getPlayerRecordObj', (event) => {
     return JSON.stringify(playerRecord)
+})
+
+ipcMain.handle('savePlayerRecordObj', (event, json) => {
+    console.log("saving")
+    console.log(playerRecord)
+    playerRecord.save()
+    // const obj = JSON.parse(json)
+    // playerRecord.save(obj)
 })
