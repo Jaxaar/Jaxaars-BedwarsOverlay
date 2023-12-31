@@ -102,7 +102,7 @@ function setKeybind(bind, keybind) {
       case 'peak':
             try {
                 globalShortcut.register(keybind, () => {
-                    if (win.isVisible()) win.hide();
+                    if (win.isVisible()) win.minimize();
                     else if (!win.isVisible()) { win.showInactive(); win.moveTop(); }
                 }); 
             } catch (error) {
