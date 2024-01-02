@@ -113,7 +113,7 @@ async function main(){
         const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
 
         if (!gameChatJSON) return
-        console.log(gameChatJSON)
+        // console.log(gameChatJSON)
         for(let s of gameChatJSON.chat){
             
             const state = {
@@ -126,7 +126,14 @@ async function main(){
             }
             for(let line of s){
                 line = "[22:01:15] [Client thread/INFO]: [CHAT] " + line 
-                handleLogLine(line, state)
+                if(state.gameStarting){
+                    setTimeout(() => {
+                        handleLogLine(line, state)
+                    }, 2000)
+                }
+                else{
+                    handleLogLine(line, state)
+                }
             }
         }
         flags.testingMode = false
@@ -167,7 +174,7 @@ function toggleSettings(){
 
 
 function displayPlayer(playerJSON){
-    console.log(displayConfig)
+    // console.log(displayConfig)
     const displayEl = document.getElementById("statsRows")
     const playerRowEl = createStatsRowElement(playerJSON, displayConfig)
 
@@ -248,7 +255,7 @@ function handleLogLine(data, state){
     const k = data.indexOf('[CHAT]');
     const msg = data.substring(k+7).replace(/(§|�)([0-9]|a|b|e|d|f|k|l|m|n|o|r|c)/gm, '');
 
-    console.log(msg)
+    // console.log(msg)
 
     if (msg.includes('ONLINE:') && msg.includes(',')){
         let playersInLobby = msg.substring(8).split(', ');
@@ -305,14 +312,17 @@ function handleLogLine(data, state){
         state.normalMode = true
 
         // Log the players who are in the game
+        console.log("Logging")
         logPlayers(players)
     } 
     
     // Catch mid game events
     else if (flags.finals && msg.includes('FINAL KILL') && !msg.includes(":")){
+        console.log("final" + msg)
         handleFinals(msg)
     }
     else if (msg.includes("BED DESTRUCTION") && msg.includes("Your Bed") && !msg.includes(":")){
+        console.log("bed" + msg)
         handleBedsBroken(msg)
     }
 
@@ -336,7 +346,7 @@ function handleLogLine(data, state){
     else if (state.gameEnded && msg.includes("Slumber Tickets! (Win)")){
         state.gameEnded = false
         console.log(playerRecord)
-        ipcRenderer.invoke("savePlayerRecordObj", playerRecord)
+        ipcRenderer.invoke('savePlayerRecordObj', JSON.stringify(playerRecord))
     }
 }
 
@@ -445,7 +455,8 @@ function setModal(contents){
 
 function logPlayers(){
     for(const p in players){
-        const player = p.name.toLowerCase()
+        // console.log(p)
+        const player = p.toLowerCase()
         // this.currentPlayers.push(player)
 
         if(this.verifyPlayer(player)){

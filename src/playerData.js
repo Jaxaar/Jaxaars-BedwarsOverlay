@@ -9,7 +9,7 @@ function createPlayerRecord(filePath, obj = {}){
     playerRecord.file = filePath
     playerRecord.players = readJSONFile(filePath)
     if(playerRecord.players == null){
-        console.log("reseting playerRecord file")
+        console.log("resetting playerRecord file")
         console.log(playerRecord.players)
         playerRecord.players = obj
         saveJSONFile(playerRecord.file, playerRecord.players)
