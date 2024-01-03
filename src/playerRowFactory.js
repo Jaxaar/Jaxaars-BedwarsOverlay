@@ -6,7 +6,7 @@
 
 
 
-function createStatsRowElement(playerJSON, colData){
+function createStatsRowElement(playerJSON, playerRecord, colData){
     if(!colData){
         return null
     }
@@ -16,12 +16,19 @@ function createStatsRowElement(playerJSON, colData){
     rowEl.id = `${playerJSON.name}-row`
     rowEl.setAttribute("data-score", playerJSON.sortingScore)
 
+    // let objOfInterest = playerJSON
+
     for(col of colData){
         if(col.activated == "false"){
             continue
         }
         if(col.unique == "true"){
             rowEl.append(handleUniqueColumn(playerJSON, col))
+            continue
+        }
+
+        if(col.record == "true"){
+            rowEl.append(handleRecordColumn(playerJSON, playerRecord.players, col))
             continue
         }
 
@@ -68,7 +75,25 @@ function getColorClass(val, col){
     return `t${i}Color`
 }
 
+function handleRecordColumn(playerJSON, playerRecord, col){
+    if(playerRecord[playerJSON.name.toLowerCase()] == undefined){
+        const el = document.createElement('td')
+        el.innerText = "-"
+        el.classList.add("t0color")
+        // console.log(playerJSON.name)
+        // console.log(playerRecord)
+        return el
+    
+    }
+    else{
+        const el = document.createElement('td')
+        const val = playerRecord[playerJSON.name.toLowerCase()][col.path]
+        el.innerText = val ? val : "-"
 
+        el.classList.add(getColorClass(val, col))
+        return el
+    }
+}
 
 function handleUniqueColumn(playerJSON, col){
     if(col.tag == "playerName"){
@@ -81,7 +106,7 @@ function handleUniqueColumn(playerJSON, col){
         }
         else{
             playerPortrait.setAttribute("data-avatar", "notNick")
-            playerPortrait.style.backgroundImage = `url(https://crafatar.com/avatars/${playerJSON.api.player.uuid}?size=48&default=MHF_Steve&overlay)`
+            // playerPortrait.style.backgroundImage = `url(https://crafatar.com/avatars/${playerJSON.api.player.uuid}?size=48&default=MHF_Steve&overlay)`
         }
 
 

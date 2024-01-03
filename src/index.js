@@ -5,7 +5,7 @@ const fs = require('fs');
 const { fetchPlayerHypixelData, fetchPlayer, verifyKey} = require('./apiCalls')
 const { createStatsRowElement } = require("./playerRowFactory")
 
-const { readJSONFile } = require('./Test/jaxaarHelpers')
+const { readJSONFile, delay } = require('./Test/jaxaarHelpers')
 
 const displayConfig = require("./displayConfig.json");
 let players = {}
@@ -92,9 +92,14 @@ async function main(){
 
 
     ipcRenderer.on('test', async (event, ...arg) => {
+        flags.testingMode = true
+        playerRecord = JSON.parse(await ipcRenderer.invoke('setTestRecordObj', 'playerRecordTEST'))
+        // console.log("settingTest")
+        // console.log(playerRecord)
+
         verifyKey(config.data.HYkey)
-        console.log('test');
-        console.log(config)
+        // console.log('test');
+        // console.log(config)
 
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
         let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG', 'TheLuckiestBunny', 'MinaUFG1010'];
@@ -107,8 +112,8 @@ async function main(){
         }
 
         console.log("Running test file...")
-
-        flags.testingMode = true
+        // console.log("3")
+        // console.log(playerRecord)
 
         const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
 
@@ -127,17 +132,20 @@ async function main(){
             for(let line of s){
                 line = "[22:01:15] [Client thread/INFO]: [CHAT] " + line 
                 if(state.gameStarting){
-                    setTimeout(() => {
-                        handleLogLine(line, state)
-                    }, 2000)
+                    await delay(2000)
+                    handleLogLine(line, state)
                 }
                 else{
                     handleLogLine(line, state)
                 }
             }
+            // console.log("4")
+            // console.log(playerRecord)
         }
+        // console.log("Setting obj")
+        // console.log(playerRecord)
+        playerRecord = JSON.parse(await ipcRenderer.invoke('setTestRecordObj', 'playerRecord'))
         flags.testingMode = false
-
     });
 
     ipcRenderer.on('clear', async (event, ...arg) => {
@@ -176,7 +184,7 @@ function toggleSettings(){
 function displayPlayer(playerJSON){
     // console.log(displayConfig)
     const displayEl = document.getElementById("statsRows")
-    const playerRowEl = createStatsRowElement(playerJSON, displayConfig)
+    const playerRowEl = createStatsRowElement(playerJSON, playerRecord, displayConfig)
 
     for(const row of displayEl.children){
         if(row.getAttribute("data-score") < playerJSON.sortingScore){
@@ -326,6 +334,7 @@ function handleLogLine(data, state){
         handleBedsBroken(msg)
     }
 
+    // Shouldn't work
     // Detect Game end (Assuming still in lobby)
     else if(state.gameRunning && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
         // Update state vars
@@ -447,7 +456,7 @@ function openModal(){
 }
 
 function setModal(contents){
-    console.log("set")
+    // console.log("set")
     const modal = document.getElementById("modal")
     modal.innerHTML = contents
 }

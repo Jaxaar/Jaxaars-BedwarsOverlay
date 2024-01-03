@@ -75,5 +75,15 @@
         "colWidth": "9%",
         "path": "api.player.stats.Bedwars.wins_bedwars",
         "colorScale": [500, 1000, 3000, 5000, 10000]
+    },
+    {
+        "tag": "gamesPlayed",
+        "title": "PlayedWith",
+        "activated": "true",
+        "unique": "false",
+        "record": "true",
+        "colWidth": "9%",
+        "path": "gamesPlayed",
+        "colorScale": [500, 1000, 3000, 5000, 10000]
     }
 ]

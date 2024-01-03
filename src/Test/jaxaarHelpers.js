@@ -18,7 +18,14 @@ function saveJSONFile(str, obj){
     console.log(`${str} File Saved`)
 }
 
+async function delay(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = {
-    saveJSONFile, readJSONFile
+    saveJSONFile, readJSONFile, delay
 }
+
+
+// "[MVP+] AdamEzo slid into the lobby!",
+// "[MVP+] cGrass slid into the lobby!"
