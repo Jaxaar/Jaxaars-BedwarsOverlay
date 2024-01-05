@@ -65,6 +65,13 @@ async function fetchPlayer(ign, options = {}) {
 
     const apiData =  await fetchPlayerHypixelData(mcData.id, mcData.name, options)
 
+    if(!apiData.player){
+        return {
+            name: ign,
+            api: undefined,
+            sortingScore: Number.MAX_VALUE
+        }
+    }
     return {
         name: ign,
         api: apiData,

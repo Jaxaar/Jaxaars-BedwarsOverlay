@@ -238,7 +238,6 @@ ipcMain.handle("unminimizeApp", (event) => {
     win.moveTop()
 })
 
-
 ipcMain.handle('toggleShow', (event, height) => {
     win.setSize(win.webContents.getOwnerBrowserWindow().getBounds().width, height, true);
 })

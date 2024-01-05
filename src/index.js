@@ -74,18 +74,7 @@ async function main(){
 
     const showButton = document.getElementById('show')
     showButton.addEventListener('click', () => {
-        //con.log(showRotation($('#show').css('transform')));
-        if (showButton.style.transform === 'rotate(90deg)'){
-            ipcRenderer.invoke('toggleShow', 600)
-            // currentWindow.setSize(currentWindow.webContents.getOwnerBrowserWindow().getBounds().width, Math.round(zoom*35), true);
-            showButton.style.transform =  'rotate(0deg)'
-            // $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none');
-        }
-        else{
-            ipcRenderer.invoke('toggleShow', Math.round(35))
-            showButton.style.transform =  'rotate(90deg)'
-            // if ($('#infodiv').css('display') === 'none' && $('#settingsdiv').css('display') === 'none'){$('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block');}
-        }
+        toggleShow()
     });
 
     // document.getElementById('session').addEventListener('click', () => {
@@ -125,7 +114,7 @@ async function main(){
         // console.log(config)
 
         // let igns = ['OhChit', 'Brains', 'Manhal_IQ_', 'Cryptizism', 'zryp', '_Creation', 'hypixel', 'Acceqted', 'FunnyNick', 'Dadzies', 'Rexisflying', 'Divinah', '86tops', 'ip_man', 'xDank', 'WarOG'];
-        let igns = ['Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG', 'TheLuckiestBunny', 'MinaUFG1010'];
+        let igns = ['Angeeeel', 'Jaxaar', 'Pypeapple', 'Xav_i', 'Protfire', 'Malizma', 'Keeper_of_gates', 'hypixel', 'WarOG', 'TheLuckiestBunny', 'MinaUFG1010'];
         // fetchPlayer('Jaxaar')
         for (const player of igns) {
             const pjson = await fetchPlayer(player)
@@ -138,7 +127,7 @@ async function main(){
         // console.log("3")
         // console.log(playerRecord)
 
-        const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
+        // const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
 
         if (!gameChatJSON) return
         // console.log(gameChatJSON)
@@ -191,6 +180,30 @@ async function main(){
             activateModal("logFile")
         }
     }
+}
+
+function toggleShow(){
+    const showButton = document.getElementById('show')
+    if (showButton.style.transform === 'rotate(90deg)'){
+        ipcRenderer.invoke('toggleShow', 600)
+        // currentWindow.setSize(currentWindow.webContents.getOwnerBrowserWindow().getBounds().width, Math.round(zoom*35), true);
+        showButton.style.transform =  'rotate(0deg)'
+        // $('#titles').css('display', 'none'); $('#indexdiv').css('display', 'none');
+    }
+    else{
+        ipcRenderer.invoke('toggleShow', Math.round(35))
+        showButton.style.transform =  'rotate(90deg)'
+        // if ($('#infodiv').css('display') === 'none' && $('#settingsdiv').css('display') === 'none'){$('#titles').css('display', 'block'); $('#indexdiv').css('display', 'block');}
+    }
+}
+
+function activateWindow(){
+    const showButton = document.getElementById('show')
+    if (showButton.style.transform === 'rotate(90deg)'){
+        toggleShow()
+    }
+    ipcRenderer.invoke('unminimizeApp')
+    return true
 }
 
 function toggleSettings(){
@@ -293,6 +306,7 @@ function handleLogLine(data, state){
     // console.log(msg)
 
     if (msg.includes('ONLINE:') && msg.includes(',')){
+        activateWindow()
         let playersInLobby = msg.substring(8).split(', ');
         const copyOfPlayers = players
         players = {}
