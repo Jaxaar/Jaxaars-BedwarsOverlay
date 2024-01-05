@@ -1,12 +1,12 @@
 To Do:
 
 Bugs:
-Not displaying over fullscreen right
+Not displaying over fullscreen right?
 
 
 QOL:
-Smart displaying (Minimize / show on detected use)
-Missing log file error ("DONE")
+Smart displaying (Minimize / show on detected use) ("Kinda")
+Missing log file error ("DONE") (Make look better)
 Allowing display color customization
 Improve settings screen
 Refactor and reorganize code
@@ -43,5 +43,6 @@ Alpha testers?
 
 
 Possible bugs:
+Change saving config 3 times on exiting
 Not detecting the team which won in different languages???
 

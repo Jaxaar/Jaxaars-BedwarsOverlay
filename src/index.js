@@ -95,6 +95,29 @@ async function main(){
         activateModal("apiKey")
     });
 
+    const usernameField = document.getElementById('usernameInput')
+    usernameField.placeholder = config.data.ign ? config.data.ign : "Enter your username"
+
+    usernameField.addEventListener('click', () => {
+        ipcRenderer.invoke("focus", true)
+    });
+
+    usernameField.addEventListener('keyup', (event) => {
+        if(event.key == "Enter"){
+            usernameField.blur()
+        }
+    });
+
+    usernameField.addEventListener('focusout', () => {
+        ipcRenderer.invoke("focus", false)
+        console.log(usernameField.value)
+        if(usernameField.value !== ""){
+            usernameField.placeholder = usernameField.value.toLowerCase()
+            ipcRenderer.invoke("setConfigField", "ign", usernameField.value.toLowerCase())
+            usernameField.value = ""
+        }
+    });
+
     document.addEventListener("badAPIKey", () => {
         if(goodHypixelKey){
             goodHypixelKey = false

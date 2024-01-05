@@ -283,3 +283,15 @@ ipcMain.handle('setTestRecordObj', (event, fileName) =>{
     // console.log(playerRecord)
     return JSON.stringify(playerRecord)
 })
+
+
+ipcMain.handle('focus', (event, focusable) => {
+    win.setFocusable(focusable);
+    if (focusable) {
+        win.focus()
+    }
+    else {
+        win.blur();
+        setTimeout(() => win.setSkipTaskbar(false), 100);
+    }
+});
