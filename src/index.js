@@ -12,7 +12,9 @@ let players = {}
 let config = {}
 let playerRecord = {}
 let goodHypixelKey = true
-
+// let goodLogFile = true
+let modalQueue = []
+let modalActive = false
 
 const flags = {
     "finals": true,
@@ -101,13 +103,13 @@ async function main(){
     });
 
     document.getElementById('api-key-modal-trigger').addEventListener('click', () => {
-        activateAPIKeyModal()
+        activateModal("apiKey")
     });
 
     document.addEventListener("badAPIKey", () => {
         if(goodHypixelKey){
             goodHypixelKey = false
-            activateAPIKeyModal()
+            activateModal("apiKey")
         }
     })
 
@@ -183,7 +185,11 @@ async function main(){
         monitorLogFile(`${logPath}`)
     }
     else{
+        goodLogFile = false
         console.log("LogPath DNE")
+        if(goodHypixelKey){
+            activateModal("logFile")
+        }
     }
 }
 
@@ -512,10 +518,14 @@ function closeModal(){
     for(const el of modalPiece){
         el.classList.add("hidden")
     }
+    modalActive = false
+    activateModal()
+
 }
 
 function openModal(){
     console.log("Open")
+    modalActive = true
     const modalPiece = document.getElementsByClassName("modal-part")
     for(const el of modalPiece){
         el.classList.remove("hidden")
@@ -573,6 +583,44 @@ function verifyPlayer(player){
             "gamesPlayed": 1,
         }
         return false
+    }
+}
+
+
+function activateLogModal(){
+    console.log("Activating and Loading modal...")
+    console.log(document.getElementById("modal"))
+    setModal(`
+        <p>BARS Overlay requires a log file to operate. Contact Jaxaar if confused.</p>
+        <div id="modal-error" class="modal-error hidden">Invalid File</div>
+        <button class="open-log-window-button" id="open-log-window-modal-button">Select Log File</button>            
+        <button id="modal-close" class="modal-close">Handle Later</button>
+    `)
+    console.log(document.getElementById("modal"))
+    openModal()
+
+    console.log(document.getElementById("modal"))
+    document.getElementById("modal-close").addEventListener("click", () =>{ closeModal()})
+    document.getElementById('open-log-window-modal-button').addEventListener("click", async ()=> {
+        ipcRenderer.invoke('setLogPath')
+    })
+
+}
+
+function activateModal(str=""){
+    if(str !== ""){
+        modalQueue.push(str)
+    }
+
+    if(modalQueue.length > 0 && !modalActive){
+        const modalVal = modalQueue.splice(0,1)[0]
+
+        if(modalVal == "apiKey"){
+            activateAPIKeyModal()
+        }
+        else if(modalVal == "logFile"){
+            activateLogModal()
+        }
     }
 }
 

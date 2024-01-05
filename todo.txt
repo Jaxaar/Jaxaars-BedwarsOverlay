@@ -6,14 +6,14 @@ Not displaying over fullscreen right
 
 QOL:
 Smart displaying (Minimize / show on detected use)
-Missing log file error
+Missing log file error ("DONE")
 Allowing display color customization
 Improve settings screen
 Refactor and reorganize code
 
 
 Features:
-Tracking Wins vs Players
+Tracking Wins vs Players (DONE)
 AutoWho
 Column Toggling (toggling displayed cols)
 Auto-update
@@ -43,5 +43,5 @@ Alpha testers?
 
 
 Possible bugs:
-Not detecting the color which won in different languages???
+Not detecting the team which won in different languages???
 
