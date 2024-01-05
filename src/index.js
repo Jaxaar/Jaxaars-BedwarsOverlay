@@ -20,6 +20,27 @@ const flags = {
     "testingMode": false,
 }
 
+// async function versionCompare() {
+//     try {
+//         await fetch('https://raw.githubusercontent.com/Chit132/abyss-overlay/master/package.json')
+//             .then(r => r.json())
+//             .then(remotePackage => {
+//                 if (remotePackage.version !== packageJSON.version) {
+//                     $('#update').css('display', 'inline-block');
+//                     const updatenotif = new Notification({
+//                         title: 'UPDATE AVAILABLE!',
+//                         body: 'To update, join the Discord, click on the update button, or click on this notification!',
+//                         icon: path.join(__dirname, '../assets/logo.ico')
+//                     });
+//                     updatenotif.on('click', () => {shell.openExternal('https://discord.gg/7dexcJTyCJ'); shell.openExternal('https://github.com/Chit132/abyss-overlay/releases/latest');});
+//                     if (app.isPackaged) updatenotif.show();
+//                 }
+//             });
+//     } catch {console.error('Cannot read remote version');}
+// }
+// versionCompare();
+
+
 
 async function main(){
 

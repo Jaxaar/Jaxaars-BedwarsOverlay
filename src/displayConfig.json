@@ -78,12 +78,12 @@
     },
     {
         "tag": "gamesPlayed",
-        "title": "PlayedWith",
+        "title": "GG",
         "activated": "true",
         "unique": "false",
         "record": "true",
         "colWidth": "9%",
         "path": "gamesPlayed",
-        "colorScale": [500, 1000, 3000, 5000, 10000]
+        "colorScale": [10, 50, 100, 250, 500]
     }
 ]

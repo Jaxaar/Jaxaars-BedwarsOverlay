@@ -3,6 +3,7 @@ const { app, BrowserWindow, globalShortcut, ipcMain, dialog } = require('electro
 const {path} = require('path')
 const { createConfig } = require("./src/configHandler")
 const { createPlayerRecord } = require("./src/playerData")
+// const { autoUpdater } = require('electron-updater');
 
 
 
@@ -20,12 +21,27 @@ let playerRecord =  createPlayerRecord(`${app.getPath('userData')}/playerRecord.
 
 // modify your existing createWindow() function
 const createWindow = () => {
+
+    // splash = new BrowserWindow({
+    //     width: 400,
+    //     height: 400
+    //     , transparent: true,
+    //     frame: false, 
+    //     alwaysOnTop: true, 
+    //     skipTaskbar: true, 
+    //     show: false, 
+    //     webPreferences: {
+    //         nodeIntegration: true,
+    //         contextIsolation: false
+    //     }});
+    // splash.loadFile('src/splash.html');
+    
     win = new BrowserWindow({
         width: 650,
         height: 600,
         minWidth: 450,
-        x:0,
-        y:0,
+        x: config.get('win-x-pos',0),
+        y: config.get('win-y-pos',0),
         show: true,
         transparent: true,
         frame: false,
@@ -44,15 +60,28 @@ const createWindow = () => {
             // preload: path.join(__dirname, 'preload.js')
         }
     })
-
     win.loadFile('./src/index.html')
+
+    // checkForUpdate();
+
+    // splash.once('ready-to-show', () => {
+    //     splash.show();
+    // });
+    // win.once('ready-to-show', () => {
+    //     splash.destroy();
+    //     win.show();
+    // });
+
     win.setAlwaysOnTop(true);
     win.setSkipTaskbar(false)
+    // win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
     // win.setVisibleOnAllWorkspaces(true);
     win.setMenu(null);
-
+    // win.removeMenu()
+    // win.setMenuBarVisibility(false)
+    // win.setAutoHideMenuBar(false)
     if(isDev){
-        win.setFocusable(true)
+        // win.setFocusable(true)
     }
   }
 
@@ -91,7 +120,14 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
     console.log("Quitting...")
     playerRecord.save()
+    const winPos = win.getPosition()
+
+    config.set("win-x-pos", winPos[0] >= 0 ? winPos[0] : 0)
+    config.set("win-y-pos", winPos[1] >= 0 ? winPos[1] : 0)
+
     config.save()
+    console.log()
+
 });
 
 
@@ -146,7 +182,42 @@ function setKeybind(bind, keybind) {
 
 
 
+// function checkForUpdate() {
+//     if (isDev) return;
+//     if (process.platform === 'win32') autoUpdater.checkForUpdates();
+// }
 
+// autoUpdater.on('update-downloaded', info => {
+//     const options = {
+//         type: 'info',
+//         title: `Abyss Overlay Update v${info.version} downloaded`,
+//         message: 'A new update has been downloaded. Updating is strongly recommended! Automatically restart overlay now and install?',
+//         detail: 'Overlay will automatically restart after update is installed',
+//         buttons: ['Yes', 'No'],
+//         icon: path.join(__dirname, 'assets', 'logo.ico'),
+//         defaultId: 0,
+//         checkboxLabel: 'Show update notes in browser'
+//     }
+//     dialog.showMessageBox(win, options).then(returned => {
+//         if (returned.checkboxChecked === true) shell.openExternal('https://github.com/Chit132/abyss-overlay/releases/latest');
+//         if (returned.response === 0) autoUpdater.quitAndInstall(true, true);
+//     });
+//     //console.log(info);
+// });
+
+// autoUpdater.on('error', (err) => {
+//     console.log(err);
+//     dialog.showMessageBox(win, {
+//         type: 'error',
+//         title: 'Auto-update error',
+//         message: 'There was an error auto-updating the overlay! Please install the new update manually ASAP',
+//         detail: 'Click "Take me there" to take you to the download page for the new version',
+//         buttons: ['Take me there', 'Later'],
+//         defaultId: 0
+//     }).then(returned => {
+//         if (returned.response === 0) shell.openExternal('https://github.com/Chit132/abyss-overlay/releases/latest');
+//     });
+// });
 
 
 
@@ -161,6 +232,12 @@ ipcMain.handle("closeApp", (event) => {
 ipcMain.handle("minimizeApp", (event) => {
     win.minimize()
 })
+
+ipcMain.handle("unminimizeApp", (event) => {
+    win.showInactive()
+    win.moveTop()
+})
+
 
 ipcMain.handle('toggleShow', (event, height) => {
     win.setSize(win.webContents.getOwnerBrowserWindow().getBounds().width, height, true);
