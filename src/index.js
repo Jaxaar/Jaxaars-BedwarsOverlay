@@ -49,7 +49,7 @@ async function main(){
 
 
     // config = JSON.parse(await ipcRenderer.invoke('setConfigField', "test123", 123456))
-    console.log(config)
+    // console.log(config)
     verifyKey(config.data.HYkey)
 
     // if(!config.data.logPath){
@@ -176,7 +176,7 @@ async function main(){
     })
 
     const logPath = config.data.logPath
-    console.log(logPath)
+    // console.log(logPath)
 
 
     if (fs.existsSync(logPath)) {
@@ -341,17 +341,17 @@ function handleLogLine(data, state){
         state.normalMode = true
 
         // Log the players who are in the game
-        console.log("Logging")
+        // console.log("Logging")
         logPlayers(players)
     } 
     
     // Catch mid game events
     else if (flags.finals && msg.includes('FINAL KILL') && !msg.includes(":")){
-        console.log("final" + msg)
+        // console.log("final" + msg)
         handleFinals(msg)
     }
     else if (msg.includes("BED DESTRUCTION") && msg.includes("Your Bed") && !msg.includes(":")){
-        console.log("bed" + msg)
+        // console.log("bed" + msg)
         handleBedsBroken(msg)
     }
 
@@ -360,12 +360,15 @@ function handleLogLine(data, state){
     else if(state.gameRunning && msg.includes("??????????????????????????????????????????????????????????????") && !msg.includes(":")){
         // Update state vars
         state.gameEnding = true
+        // console.log("Game Ending")
+
     }
     // Verify Game end
     else if (state.gameEnding && msg.replaceAll(" ", "").includes("BedWars") && !msg.includes(":")){
         state.gameEnding = false
         state.gameRunning = false
         state.gameEnded = true
+        // console.log("Game Ended")
     }
 
     // Game end WIP
@@ -373,9 +376,26 @@ function handleLogLine(data, state){
     //     state.gameEnded = false
     //     ipcRenderer.invoke("savePlayerRecordObj", playerRecord)
     // }
+
+    // Potentially fails with language changes?
+    else if (state.gameEnded && (msg.includes("Blue -") || msg.includes("Red -") || msg.includes("Yellow -") || msg.includes("Green -") || msg.includes("Aqua -")  || msg.includes("Gray -")  || msg.includes("Pink -") || msg.includes("White -") ) && !msg.includes(":")){
+        // console.log("Game Ended - Color")
+        handleWinningPlayers(msg)
+        // console.log(playerRecord.players)
+
+    }
+    // Win
     else if (state.gameEnded && msg.includes("Slumber Tickets! (Win)")){
         state.gameEnded = false
-        console.log(playerRecord)
+        // console.log("Record")
+        // console.log(playerRecord)
+        ipcRenderer.invoke('savePlayerRecordObj', JSON.stringify(playerRecord))
+    }
+    // Loss
+    else if (state.gameEnded && msg.includes("Slumber Tickets! (Win)")){
+        state.gameEnded = false
+        // console.log("Record")
+        // console.log(playerRecord)
         ipcRenderer.invoke('savePlayerRecordObj', JSON.stringify(playerRecord))
     }
 }
@@ -385,6 +405,32 @@ function handleLogLine(data, state){
 //     console.log("Data: ")
 //     console.log(data)
 // }
+
+function handleWinningPlayers(msg){
+    const split = msg.replaceAll(" ", "").split("-")
+    const color = split[0]
+    const playerList = split[1].toLowerCase().split(",")
+
+    for(let i = 0; i < playerList.length; i++){
+        // Remove rank tag
+        if(playerList[i].includes("]")){
+            playerList[i] = playerList[i].split("]")[1]
+        }
+    }
+
+    const playerWon =  playerList.includes(config.data.ign)
+
+    for(let p of playerList){
+        // Remove rank tag
+
+        verifyPlayer(p)
+        playerRecord.players[p].gamesWon = playerRecord.players[p].gamesWon ? playerRecord.players[p].gamesWon + 1 : 1
+
+        if(playerWon){
+            playerRecord.players[p].winsWith = playerRecord.players[p].winsWith ? playerRecord.players[p].winsWith + 1 : 1
+        }
+    }
+}
 
 async function addPlayer(playerName, data){
     if(players[playerName]){

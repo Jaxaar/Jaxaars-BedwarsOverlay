@@ -126,7 +126,7 @@ app.on('before-quit', () => {
     config.set("win-y-pos", winPos[1] >= 0 ? winPos[1] : 0)
 
     config.save()
-    console.log()
+    // console.log()
 
 });
 

@@ -10,14 +10,14 @@ function createPlayerRecord(filePath, obj = {}){
     playerRecord.players = readJSONFile(filePath)
     if(playerRecord.players == null){
         console.log("resetting playerRecord file")
-        console.log(playerRecord.players)
+        // console.log(playerRecord.players)
         playerRecord.players = obj
         saveJSONFile(playerRecord.file, playerRecord.players)
     }  
 
     playerRecord.set = function (key, value){
         this.players[key] = value
-        console.log(this.players)
+        // console.log(this.players)
         return value
     }
 

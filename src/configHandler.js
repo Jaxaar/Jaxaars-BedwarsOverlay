@@ -9,14 +9,14 @@ function createConfig(filePath, obj = {}){
     config.data = readJSONFile(filePath)
     if(config.data == null){
         console.log("reseting config file")
-        console.log(config.data)
+        // console.log(config.data)
         config.data = obj
         saveJSONFile(config.file, config.data)
     }  
 
     config.set = function (key, value){
         this.data[key] = value
-        console.log(this.data)
+        // console.log(this.data)
         saveJSONFile(this.file, this.data)
         return value
     }

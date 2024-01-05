@@ -85,5 +85,25 @@
         "colWidth": "9%",
         "path": "gamesPlayed",
         "colorScale": [10, 50, 100, 250, 500]
+    },
+    {
+        "tag": "gamesWon",
+        "title": "GW",
+        "activated": "false",
+        "unique": "false",
+        "record": "true",
+        "colWidth": "9%",
+        "path": "gamesWon",
+        "colorScale": [10, 50, 100, 250, 500]
+    },
+    {
+        "tag": "winsWith",
+        "title": "WW",
+        "activated": "false",
+        "unique": "false",
+        "record": "true",
+        "colWidth": "9%",
+        "path": "winsWith",
+        "colorScale": [10, 50, 100, 250, 500]
     }
 ]

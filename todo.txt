@@ -5,10 +5,12 @@ Not displaying over fullscreen right
 
 
 QOL:
+Smart displaying (Minimize / show on detected use)
 Missing log file error
 Allowing display color customization
 Improve settings screen
 Refactor and reorganize code
+
 
 Features:
 Tracking Wins vs Players
@@ -22,17 +24,15 @@ Future ideas:
 Bars Bounty system
 Adding custom columns
 Changing background art
+Tracking session stats (correctly)
+Info Page explaining overlay??????
 
-
-
-
-
-
+More stats: Games clutched
 
 
 Remaining items before full release:
 Security checks
-Alpha testers
+Alpha testers?
 
 
 
@@ -42,4 +42,6 @@ Alpha testers
 
 
 
+Possible bugs:
+Not detecting the color which won in different languages???
 
