@@ -1,0 +1,45 @@
+To Do:
+
+Bugs:
+Not displaying over fullscreen right
+
+
+QOL:
+Missing log file error
+Allowing display color customization
+Improve settings screen
+Refactor and reorganize code
+
+Features:
+Tracking Wins vs Players
+AutoWho
+Column Toggling (toggling displayed cols)
+Auto-update
+
+
+
+Future ideas:
+Bars Bounty system
+Adding custom columns
+Changing background art
+
+
+
+
+
+
+
+
+Remaining items before full release:
+Security checks
+Alpha testers
+
+
+
+
+
+
+
+
+
+
