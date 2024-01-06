@@ -150,7 +150,7 @@ async function main(){
         // console.log("3")
         // console.log(playerRecord)
 
-        // const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
+        const gameChatJSON = readJSONFile(`${__dirname}/Test/jaxaarTestingData.json`)
 
         if (!gameChatJSON) return
         // console.log(gameChatJSON)
@@ -484,6 +484,10 @@ async function addPlayer(playerName, data){
     }
     console.log(`Adding ${playerName}`)
     players[playerName] = data
+    if(document.getElementById(`${players[playerName].name}-row`)){
+        return
+    }
+
     displayPlayer(players[playerName])
 }
 

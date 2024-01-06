@@ -75,7 +75,7 @@ const createWindow = () => {
     win.setAlwaysOnTop(true);
     win.setSkipTaskbar(false)
     // win.setVisibleOnAllWorkspaces(true, {visibleOnFullScreen: true});
-    // win.setVisibleOnAllWorkspaces(true);
+    win.setVisibleOnAllWorkspaces(true);
     win.setMenu(null);
     // win.removeMenu()
     // win.setMenuBarVisibility(false)
