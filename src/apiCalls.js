@@ -12,7 +12,7 @@ const MOJANG_API = 'https://api.mojang.com/users/profiles/minecraft/'
 /**
  * Sets the API caller's API Key after first verifying it is valid
  * @param {String} key 
- * @returns The key or undefined if the key is invalid
+ * @returns The key as a string or undefined if the key is invalid
  */
 async function verifyKey(key) {
     header = {'api-key': key}
@@ -38,7 +38,7 @@ async function verifyKey(key) {
 /**
  * Fetches the uuid from mojang's servers and then the api data from hypixel
  * @param {String} ign the player's in-game name
- * @returns an object {name: ign, api: hypixelAPIData, sortingScore: the relative ranking of the player based on stats}
+ * @returns {PlayerJSON} an object {name: ign, api: hypixelAPIData, sortingScore: the relative ranking of the player based on stats}
  */
 async function fetchPlayer(ign) {
     // let cached_uuid = CACHE_UUID.get(ign);
@@ -54,8 +54,6 @@ async function fetchPlayer(ign) {
     //     return;
     // }
     console.log(`Fetching player: ${ign}`);
-
-
     const mcData = await fetchPlayerMinecraftData(ign)
 
     if (!goodkey || !mcData) {
@@ -69,7 +67,7 @@ async function fetchPlayer(ign) {
         }
     }
 
-    const apiData =  await fetchPlayerHypixelData(mcData.id, mcData.name, options)
+    const apiData =  await fetchPlayerHypixelData(mcData.id, mcData.name)
 
     if(!apiData.player){
         return {
@@ -86,9 +84,9 @@ async function fetchPlayer(ign) {
 }
 
 /**
- * 
- * @param {*} ign 
- * @returns 
+ * Fetches the uuid from mojang's servers with the player's name
+ * @param {String} ign The player's in-game name
+ * @returns an object with the data from the mojang api
  */
 
 async function fetchPlayerMinecraftData(ign) {
@@ -103,8 +101,13 @@ async function fetchPlayerMinecraftData(ign) {
     return dataJSON
 }
 
-
-async function fetchPlayerHypixelData(uuid, ign, options) {
+/**
+ * Fetches the api data from hypixel's servers with the player's name
+ * @param {String} uuid The player user ID - from mojang
+ * @param {String} ign The player's in-game name
+ * @returns an object with the data from the hypixel api
+ */
+async function fetchPlayerHypixelData(uuid, ign) {
     const url = `${HY_API}/player?uuid=${uuid}`
     
     const data  = await fetch(url, {
@@ -136,7 +139,11 @@ async function fetchPlayerHypixelData(uuid, ign, options) {
 
 
 
-
+/**
+ * Calculates the score to determine the sorting order for the display
+ * @param {HypixelAPI} data 
+ * @returns an int value for the sorting order
+ */
 function scoreJSON(data){
 
     const fkdr = Math.round(data.player.stats.Bedwars.final_kills_bedwars / data.player.stats.Bedwars.final_deaths_bedwars * 100) / 100
