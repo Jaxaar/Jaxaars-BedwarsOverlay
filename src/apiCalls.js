@@ -9,9 +9,11 @@ const MOJANG_API = 'https://api.mojang.com/users/profiles/minecraft/'
 
 
 
-
-
-
+/**
+ * Sets the API caller's API Key after first verifying it is valid
+ * @param {String} key 
+ * @returns The key or undefined if the key is invalid
+ */
 async function verifyKey(key) {
     header = {'api-key': key}
 
@@ -33,8 +35,12 @@ async function verifyKey(key) {
 }
 
 
-
-async function fetchPlayer(ign, options = {}) {
+/**
+ * Fetches the uuid from mojang's servers and then the api data from hypixel
+ * @param {String} ign the player's in-game name
+ * @returns an object {name: ign, api: hypixelAPIData, sortingScore: the relative ranking of the player based on stats}
+ */
+async function fetchPlayer(ign) {
     // let cached_uuid = CACHE_UUID.get(ign);
     // if (cached_uuid) {
     //     if (!overlayBackendDown) {
@@ -79,7 +85,13 @@ async function fetchPlayer(ign, options = {}) {
     }
 }
 
-async function fetchPlayerMinecraftData(ign, options) {
+/**
+ * 
+ * @param {*} ign 
+ * @returns 
+ */
+
+async function fetchPlayerMinecraftData(ign) {
     const url = MOJANG_API + ign
     
     const mojangData = await fetch(url)

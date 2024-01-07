@@ -60,8 +60,9 @@ async function main(){
 
     setDisplayTitles()
 
-    // Handle Control Buttons
+    // TODO: move listeners to their own methods to clean up main
 
+    // Handle Control Buttons
     document.getElementById('quit').addEventListener('click', () => {
         // config.delete('players');
         // config.set('settings.pos', currentWindow.getPosition()); 
@@ -87,6 +88,7 @@ async function main(){
         toggleSettings()
     });
 
+    // TODO: Move settings listeners to their own method
     document.getElementById('open-log-window').addEventListener('click', () => {
         openLogPathWindow()
     });
@@ -189,9 +191,9 @@ async function main(){
 
     })
 
+    
     const logPath = config.data.logPath
     // console.log(logPath)
-
 
     if (fs.existsSync(logPath)) {
         monitorLogFile(`${logPath}`)
@@ -243,7 +245,7 @@ function toggleSettings(){
     }
 }
 
-
+// Potentially move displaying to another file
 function displayPlayer(playerJSON){
     // console.log(displayConfig)
     const displayEl = document.getElementById("statsRows")
@@ -289,13 +291,6 @@ function setDisplayTitles(){
     }
 }
 
-
-document.addEventListener("DOMContentLoaded", () =>{
-    main()
-})
-
-
-
 function monitorLogFile(filePath){
     let tail
     try{
@@ -317,6 +312,11 @@ function monitorLogFile(filePath){
         handleLogLine(data, state)
     })
 }
+
+
+document.addEventListener("DOMContentLoaded", () =>{
+    main()
+})
 
 
 function handleLogLine(data, state){
@@ -414,12 +414,6 @@ function handleLogLine(data, state){
         // console.log("Game Ended")
     }
 
-    // Game end WIP
-    // else if (state.gameEnded && msg.toLowerCase().includes(this.userTeamColor) && this.userTeamColor != ""){
-    //     state.gameEnded = false
-    //     ipcRenderer.invoke("savePlayerRecordObj", playerRecord)
-    // }
-
     // Potentially fails with language changes?
     else if (state.gameEnded && (msg.includes("Blue -") || msg.includes("Red -") || msg.includes("Yellow -") || msg.includes("Green -") || msg.includes("Aqua -")  || msg.includes("Gray -")  || msg.includes("Pink -") || msg.includes("White -") ) && !msg.includes(":")){
         // console.log("Game Ended - Color")
@@ -448,32 +442,6 @@ function handleLogLine(data, state){
 //     console.log("Data: ")
 //     console.log(data)
 // }
-
-function handleWinningPlayers(msg){
-    const split = msg.replaceAll(" ", "").split("-")
-    const color = split[0]
-    const playerList = split[1].toLowerCase().split(",")
-
-    for(let i = 0; i < playerList.length; i++){
-        // Remove rank tag
-        if(playerList[i].includes("]")){
-            playerList[i] = playerList[i].split("]")[1]
-        }
-    }
-
-    const playerWon =  playerList.includes(config.data.ign)
-
-    for(let p of playerList){
-        // Remove rank tag
-
-        verifyPlayer(p)
-        playerRecord.players[p].gamesWon = playerRecord.players[p].gamesWon ? playerRecord.players[p].gamesWon + 1 : 1
-
-        if(playerWon){
-            playerRecord.players[p].winsWith = playerRecord.players[p].winsWith ? playerRecord.players[p].winsWith + 1 : 1
-        }
-    }
-}
 
 async function addPlayer(playerName, data){
     if(players[playerName]){
@@ -504,82 +472,12 @@ async function removePlayer(playerName){
 
 }
 
-function activateAPIKeyModal(){
-    console.log("Activating and Loading modal...")
-    console.log(document.getElementById("modal"))
-    setModal(`
-        <p>BARS Overlay requires using a developer hypixel api key, and yours is currently invalid.</p>
-        <ul>
-            <li style="height: auto">Generate a new API key <a id="hy-dev-portal" href="">here</a> and paste it below.</li>
-            <li style="height: auto">For more information, follow <a id="api-key-guide" href="">this</a> guide. (Thx Abyss Overlay)</li>
-        </ul>
-        <div id="modal-error" class="modal-error hidden">Invalid Key</div>
-        <input type="text" class="api_key__input" id="modal_api_key" name="Hypixel API Key" maxlength="36" size="36" placeholder="Click to paste API key">               
-        <button id="modal-close" class="modal-close">Handle Later</button>
-    `)
-    console.log(document.getElementById("modal"))
-    openModal()
-
-    console.log(document.getElementById("modal"))
-    document.getElementById("modal-close").addEventListener("click", () =>{ closeModal()})
-    document.getElementById('hy-dev-portal').addEventListener("click", ()=> { shell.openExternal('https://developer.hypixel.net/dashboard')})
-    document.getElementById('api-key-guide').addEventListener("click", ()=> { shell.openExternal('https://github.com/Chit132/abyss-overlay/wiki/Hypixel-API-Keys-Guide')})
-    document.getElementById('modal_api_key').addEventListener("click", async ()=> {
-        const validKey = await clipboardKey() 
-        if(!validKey){
-            document.getElementById('modal-error').classList.remove("hidden")
-         }
-         else{
-            closeModal()
-            config = JSON.parse(await ipcRenderer.invoke('setConfigField', "HYkey", validKey))
-        }
-    })
-
-}
-
-async function clipboardKey() {
-    let copied = clipboard.readText()
-    if (copied){ 
-        copied = copied.replace(/\s/g, '')
-    }
-    if (copied.length !== 36) {
-        return false
-    }
-    return await verifyKey(copied)
-    // Set key in config
-}
-
+// Remove function, replace contents, Change invoke method name 
 async function openLogPathWindow(){
     ipcRenderer.invoke('setLogPath')
 }
 
-
-function closeModal(){
-    const modalPiece = document.getElementsByClassName("modal-part")
-    for(const el of modalPiece){
-        el.classList.add("hidden")
-    }
-    modalActive = false
-    activateModal()
-
-}
-
-function openModal(){
-    console.log("Open")
-    modalActive = true
-    const modalPiece = document.getElementsByClassName("modal-part")
-    for(const el of modalPiece){
-        el.classList.remove("hidden")
-    }
-}
-
-function setModal(contents){
-    // console.log("set")
-    const modal = document.getElementById("modal")
-    modal.innerHTML = contents
-}
-
-
+// Potentially move all logging functionality to a seperate file/ make it a class?
 function logPlayers(){
     for(const p in players){
         // console.log(p)
@@ -614,19 +512,102 @@ function handleBedsBroken(msg){
     }
 }
 
-function verifyPlayer(player){
-    if(playerRecord.players[player]){
+function handleWinningPlayers(msg){
+    const split = msg.replaceAll(" ", "").split("-")
+    const color = split[0]
+    const playerList = split[1].toLowerCase().split(",")
+
+    for(let i = 0; i < playerList.length; i++){
+        // Remove rank tag
+        if(playerList[i].includes("]")){
+            playerList[i] = playerList[i].split("]")[1]
+        }
+    }
+
+    const playerWon =  playerList.includes(config.data.ign)
+
+    for(let p of playerList){
+        // Remove rank tag
+
+        verifyPlayer(p)
+        playerRecord.players[p].gamesWon = playerRecord.players[p].gamesWon ? playerRecord.players[p].gamesWon + 1 : 1
+
+        if(playerWon){
+            playerRecord.players[p].winsWith = playerRecord.players[p].winsWith ? playerRecord.players[p].winsWith + 1 : 1
+        }
+    }
+}
+
+/**
+ * Verifies that the player is in the record. Forces all player names to lowercase
+ * @param {String} playerName 
+ * @returns boolean if player is in the record
+ */
+function verifyPlayer(playerName){
+    playerName = playerName.toLowerCase()
+    if(playerRecord.players[playerName]){
         return true
     }
     else{
-        playerRecord.players[player] = {
-            "name": player,
+        playerRecord.players[playerName] = {
+            "name": playerName,
             "gamesPlayed": 1,
         }
         return false
     }
 }
 
+// TODO: Move Modal functions to helper or their own file
+
+function activateModal(str=""){
+    if(str !== ""){
+        modalQueue.push(str)
+    }
+
+    if(modalQueue.length > 0 && !modalActive){
+        const modalVal = modalQueue.splice(0,1)[0]
+
+        if(modalVal == "apiKey"){
+            activateAPIKeyModal()
+        }
+        else if(modalVal == "logFile"){
+            activateLogModal()
+        }
+    }
+}
+
+function activateAPIKeyModal(){
+    console.log("Activating and Loading modal...")
+    console.log(document.getElementById("modal"))
+    setModal(`
+        <p>BARS Overlay requires using a developer hypixel api key, and yours is currently invalid.</p>
+        <ul>
+            <li style="height: auto">Generate a new API key <a id="hy-dev-portal" href="">here</a> and paste it below.</li>
+            <li style="height: auto">For more information, follow <a id="api-key-guide" href="">this</a> guide. (Thx Abyss Overlay)</li>
+        </ul>
+        <div id="modal-error" class="modal-error hidden">Invalid Key</div>
+        <input type="text" class="api_key__input" id="modal_api_key" name="Hypixel API Key" maxlength="36" size="36" placeholder="Click to paste API key">               
+        <button id="modal-close" class="modal-close">Handle Later</button>
+    `)
+    console.log(document.getElementById("modal"))
+    openModal()
+
+    console.log(document.getElementById("modal"))
+    document.getElementById("modal-close").addEventListener("click", () =>{ closeModal()})
+    document.getElementById('hy-dev-portal').addEventListener("click", ()=> { shell.openExternal('https://developer.hypixel.net/dashboard')})
+    document.getElementById('api-key-guide').addEventListener("click", ()=> { shell.openExternal('https://github.com/Chit132/abyss-overlay/wiki/Hypixel-API-Keys-Guide')})
+    document.getElementById('modal_api_key').addEventListener("click", async ()=> {
+        const validKey = await getKeyFromClipboard() 
+        if(!validKey){
+            document.getElementById('modal-error').classList.remove("hidden")
+         }
+         else{
+            closeModal()
+            config = JSON.parse(await ipcRenderer.invoke('setConfigField', "HYkey", validKey))
+        }
+    })
+
+}
 
 function activateLogModal(){
     console.log("Activating and Loading modal...")
@@ -648,21 +629,48 @@ function activateLogModal(){
 
 }
 
-function activateModal(str=""){
-    if(str !== ""){
-        modalQueue.push(str)
+function openModal(){
+    // console.log("Open")
+    modalActive = true
+    const modalPiece = document.getElementsByClassName("modal-part")
+    for(const el of modalPiece){
+        el.classList.remove("hidden")
     }
+}
 
-    if(modalQueue.length > 0 && !modalActive){
-        const modalVal = modalQueue.splice(0,1)[0]
-
-        if(modalVal == "apiKey"){
-            activateAPIKeyModal()
-        }
-        else if(modalVal == "logFile"){
-            activateLogModal()
-        }
+function closeModal(){
+    const modalPiece = document.getElementsByClassName("modal-part")
+    for(const el of modalPiece){
+        el.classList.add("hidden")
     }
+    modalActive = false
+    activateModal()
+
+}
+
+function setModal(contents){
+    // console.log("set")
+    const modal = document.getElementById("modal")
+    modal.innerHTML = contents
+}
+
+
+
+// Move to helper and verify afterwards? Or remove function entirely (Put it in the code straight)??
+/**
+ * 
+ * @returns The API Key or undefined if invalid
+ */
+async function getKeyFromClipboard() {
+    let copied = clipboard.readText()
+    if (copied){ 
+        copied = copied.replace(/\s/g, '')
+    }
+    if (copied.length !== 36) {
+        return false //TODO: Change to return undefined instead of false, for verifyKey too
+    }
+    return await verifyKey(copied)
+    // Set key in config
 }
 
 module.exports = {
