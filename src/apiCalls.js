@@ -155,27 +155,3 @@ function scoreJSON(data){
 module.exports = {
     fetchPlayerHypixelData, fetchPlayer, verifyKey
 }
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Validate a response to ensure the HTTP status coe indicates success.
- * 
- * @param {Response} response HTTP Response to be checked
- * @returns {object} object encoded by JSON in the response
- */
-function validateJSON(response){
-    if(response.ok){
-        return response.json()
-    } else {
-        return Promise.reject(response)
-    }
-}

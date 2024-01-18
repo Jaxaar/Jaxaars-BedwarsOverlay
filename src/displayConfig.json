@@ -105,5 +105,36 @@
         "colWidth": "9%",
         "path": "winsWith",
         "colorScale": [10, 50, 100, 250, 500]
+    },
+    {
+        "tag": "Bedlosses",
+        "title": "BLs",
+        "activated": "false",
+        "unique": "false",
+        "record": "false",
+        "colWidth": "9%",
+        "path": "api.player.stats.Bedwars.beds_lost_bedwars",
+        "colorScale": [10, 50, 100, 250, 500]
+    },
+    {
+        "tag": "Ls",
+        "title": "Ls",
+        "activated": "false",
+        "unique": "false",
+        "record": "false",
+        "colWidth": "9%",
+        "path": "api.player.stats.Bedwars.losses_bedwars",
+        "colorScale": [10, 50, 100, 250, 500]
+    },
+    {
+        "tag": "Finaldeaths",
+        "title": "FDs",
+        "activated": "false",
+        "unique": "false",
+        "record": "false",
+        "colWidth": "9%",
+        "path": "api.player.stats.Bedwars.final_deaths_bedwars",
+        "colorScale": [10, 50, 100, 250, 500]
     }
 ]
+
